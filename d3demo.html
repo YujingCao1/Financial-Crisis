@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Network of CDO</title>
+<script src='http://d3js.org/d3.v3.min.js'></script>
+<script src="js/vendor/jquery.js"></script>
+<script src="http://d3js.org/topojson.v0.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/plugins/foundation.slider.js'></script>
+<script type='text/javascript' src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"> </script>
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body onresize="resizePage()">
+<div id="header">
+<h2>
+Interactive Network of Bank and CDO
+</h2>
+</div>
+
+<div id="introduction">
+<p>This is an interactive network which shows the relationship between bank and CDO. Please feel free to play around. <em>Enjoy!</em><br /><br />
+The failure of a CDO may affect the banks which own the corresponding CDO.
+Dynamic relationships between CDOs and banks can be shown by setting different thresholds for CDOs.<br /><br />
+Use "Threshold" slider bar to define the percentage of a bank's CDO fails.<br />
+If X percent of a bank's CDO fails, the bank will fail.
+</p>
+</div>
+
+
+<div id="dropdown">
+     <div id="Threshold">
+     <h3>Threshold<br /></h3>
+     </div>
+     <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
+     <span id="range">0</span><br><br>
+	<label>Which CDO will fail: <br /><br /></label>
+     <select id="cdo" name="CDO_name" onchange="effectOfCdO()">
+	 	<option selected value=-1>Select a CDO</option>
+	 	<option value=4>CDO1</option>
+	 	<option value=5>CDO2</option>
+	 	<option value=6>CDO3</option>
+	 	<option value=7>CDO4</option>
+		<option value=8>CDO5</option>
+		<option value=9>CDO6</option>
+	 </select>
+</div> 
+
+<div id="options" onchange="resizePage()">
+         <p>Due to cross-ownership of CDO's, banks are connected to each other.<br />
+         Some of these connections are more direct, and some are more indirect.</p>
+         <dd>
+             <li>For each bank X, how many other banks is ti related to (in sum)?
+             <li>For each bank X, within 3 CDO links, how many other banks is it related to?<br />
+             <li>For each bank X, within 1 CDO link, how many other banks is it related to?<br />
+         </dd>
+		 <p>Choose the bank you would like to explore and the number of CDO links</p>
+         <select id="bank" name="Bank_explore" onchange="crossOwnership()">
+		 	<option selected value=-1>Select a Bank</option>
+         	<option value=0>Bank A</option>
+         	<option value=1>Bank B</option>
+         	<option value=2>Bank C</option> 
+         	<option value=3>Bank D</option>
+         </select>
+         <select id="cdoOwnership" name="CDO_Ownership" onchange="crossOwnership()">
+			 <option selected value=-1>Select The Number of CDO Links</option>
+         	<option value=1>1</option>
+         	<option value=2>2</option> 
+         	<option value=3>3</option>
+         </select>
+</div>
+
+<div id="distance" onchange="resizePage()">
+	<p>What is the shortest distance between the selected banks?<br /></p>
+	<div style="display:inline-block; vertical-align:center;">Shortest distance between </div>
+	<select id="bankList1" onchange="deactiveOption()">
+		<option selected value=-1> Select a Bank</option>
+		<option value=0>Bank A</option>
+    	<option value=1>Bank B</option>
+    	<option value=2>Bank C</option> 
+    	<option value=3>Bank D</option>
+	</select>
+	<div style="display:inline-block; vertical-align:center;"> and</div>
+	<select id="bankList2" onchange="deactiveOption()">
+		 <option selected value=-1>Select a Bank</option>
+         <option value=0>Bank A</option>
+         <option value=1>Bank B</option>
+         <option value=2>Bank C</option> 
+         <option value=3>Bank D</option>
+         </select>
+    <div style="display: inline-block; vertical-align: center;"> is</div>
+    <input type="text" name="shortestDistance" value=" " id="path"/>
+    <div style="display: inline-block; vertical-align: center;"> CDOs</div>
+
+</div>
+
+<div id="tooltip"></div>
+<div id="container"></div>
+<script type="text/javascript">
+
+var dataset={
+     nodes:[
+	    {
+         name:"Bank A",
+         size:3,
+         group:1,
+		 x:300,
+		 y:260,
+		 fixed:true
+		 },
+        {
+         name:"Bank B",
+         size:2,
+         group:1,
+		 x:650,
+		 y:500,
+		 fixed:true
+		 },
+        {
+         name:"Bank C",
+         size:2,
+         group:1,
+		 x:850,
+		 y:305,
+		 fixed:true
+          },
+        {
+         name:"Bank D",
+         size:1,
+         group:1,
+		 x:400,
+		 y:90,
+		 fixed:true
+         },
+        {
+         name:"CDO 1",
+         size: 1,
+         group:2,
+		 x:600,
+		 y:260,
+		 fixed:true
+         },
+        {
+         name:"CDO 2",
+         size:2,
+         group:2,
+		 x:500,
+		 y:380,
+		 fixed:true
+         },
+        {
+         name:"CDO 3",
+         size: 1,
+         group:2,
+		 x:250,
+		 y:430,
+		 fixed:true
+         },
+        {
+         name:"CDO 4",
+         size:2,
+         group:2,
+		 x:900,
+		 y:430,
+		 fixed:true
+         },
+        {
+         name:"CDO 5",
+         size:1,
+         group:2,
+		 x:200,
+		 y:200,
+		 fixed:true
+         },
+        {
+         name:"CDO 6",
+         size:1,
+         group:2,
+		 x:800,
+		 y:130,
+		 fixed:true
+         }
+    ],
+     link:[
+	 {
+         source: 0, 
+         target: 4,
+         },
+        {
+         source:0,
+         target:5
+         },
+        {
+         source: 0, 
+         target: 6
+         },
+        {
+         source: 1, 
+         target: 5
+         },
+         {
+         source: 1, 
+         target: 7
+         },
+        {
+         source: 2, 
+         target: 7
+		 },
+        {
+         source: 2, 
+         target: 9
+         },
+        {
+         source: 3, 
+         target: 8
+         },
+         {
+         source: 5, 
+         target: 6
+         },
+         {
+         source: 4, 
+         target: 7
+         }
+		 ]
+}
+
+var width=window.innerWidth,
+    height=window.innerHeight;
+var toggle=0; // store whether the highlighting is on
+
+//var color=d3.scale.category20();
+var force=d3.layout.force()
+            .nodes(dataset.nodes)
+            .links(dataset.link)
+            .charge(-200)
+            .linkDistance(400)
+            .size([width,height])
+            .start();
+
+
+var svg=d3.select("div#container")
+          .append("svg")
+          .attr("width",window.innerWidth*0.8)
+          .attr("height",window.innerHeight*0.7)
+          .append("g")
+		  .attr("transform", "translate(75,10)")
+		  .on('dblclick',reset);
+		  
+var link=svg.selectAll(".link")
+            .data(dataset.link)
+            .enter()
+            .append("line")
+            .attr("class","link");
+
+var node=svg.selectAll(".node")
+             .data(dataset.nodes)
+			 .enter()
+			 .append("g")
+			 .attr("class","node")
+			 .call(force.drag);
+			 
+	node .append("circle")
+	     .attr("r", function(d){
+	                 return d.size*13;
+	                 })
+         .style("fill", function (d) {
+                 if (d.group==1){
+	                 return "rgba(63, 127, 191, 0.9)";
+	                 } else{
+	                        return "rgba(255, 229, 0, 0.9)";
+	                     }
+                    });
+	node.append("text")
+	    .attr("dx",-15)
+		.text(function(d){
+		     return d.name;
+			 });
+	node.on('click',neighboringNodes);
+	
+var tip=d3.select("text")
+          .append("div")
+          .attr("class","tooltip");
+		   
+// Add a legend
+var colordata=[{value:1,name:"Bank"},{value:2,name:"CDO"}];
+
+var legend = svg.selectAll('.legend')
+                .data(colordata)
+                .enter().append('g')
+                .attr('class', 'legend')
+                .attr('ID', function(d) { return d.name })
+                .attr("transform", function(d,i) {
+                        return "translate(" + 60 + "," + (i+3)*30 + ")";
+                });
+
+	legend.append("rect")
+      	.attr('width', 25).attr('height', 20)
+	  	.attr('x', 30).attr('y', 5)
+      	.style('fill', function(d) {
+        	if (d.value==1){
+			return "rgba(63, 127, 191, 0.9)";
+			}
+			if (d.value==2){
+			return "rgba(255, 229, 0, 0.9)";
+			}
+      	});
+
+	legend.append("text")
+      	.attr('x', 70).attr('y', 19)
+      	.text(function(d) { return d.name; })
+      	.attr("stroke","black")
+	  	.style("font-size","14px");
+
+	force.on("tick",function(){
+	link.attr("x1",function(d){
+          return d.source.x;
+        })
+    	.attr("y1",function(d){
+          return d.source.y;
+        })
+        .attr("x2",function (d){
+          return d.target.x;
+        })
+        .attr("y2",function(d){
+          return d.target.y;
+        });
+	node.attr("transform",function(d){
+     	return "translate("+d.x+","+d.y+")";});
+		});
+
+		
+var linkedByIndex={}; // this is an array to store nodes and its directly connected neighbors
+for (i=0;i<dataset.nodes.length;i++){
+        linkedByIndex[i+","+i]=1;
+};
+
+
+dataset.link.forEach(function (d) {
+    linkedByIndex[d.source.index + "," + d.target.index] = 1;
+});
+
+var cdo=document.getElementById('cdo');
+
+var cdoLink=document.getElementById("cdoOwnership");
+var bank=document.getElementById("bank");
+
+var bank1=document.getElementById("bankList1");
+var bank2=document.getElementById("bankList2");
+
+function deactiveOption(){
+
+	var d=bank1.value;
+	var dd=bank2.value;
+	if (d!=-1){
+		for (var i=0;i<bank2.length;i++){
+			bank2.options[i].disabled=false;
+			if (bank2.options[i].value==d){
+				bank2.options[i].disabled=true;
+			}
+		}
+	}
+	if (dd!=-1){
+		for (var i=0;i<bank1.length;i++){
+			bank1.options[i].disabled=false;
+			if (bank1.options[i].value==dd){
+				bank1.options[i].disabled=true;
+			}
+		}
+	}
+}
+
+function calculateDistance(){
+	var nodePath=[];
+	var continuing=true;
+    var d=bank1.value;
+    var dd=bank2.value;
+
+	if (d!=-1&dataset.nodes[d].size>=1){
+		node.each(function(o){
+			if (isConnected(d,o)&o.size>1&o.name!=d.name){
+				nodePath.push(o);
+			}
+		});
+	}
+	while(continuing){
+		if (nodePath.length>0){
+			node.each(function(o) {
+				nodePath.forEach(function(e){
+					if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name){
+						nodePath.push(o);
+					}
+				});
+			});
+		}
+		if (nodePath.includes(dataset.nodes[dd])){
+			nodePath.push(d);
+			node.style("opacity",function(o){
+				return nodePath.includes(o)? 0.9:0.1;
+			});
+			link.style("stroke", function(o){
+				nodePath.forEach(function(e){
+					return (nodePath.includes(o.source)&o.target==e)|(nodePath.includes(o.target)&o.source==e)? "#F50F0F":"#999999";
+				})
+			});
+			continuing=false;
+		}else{
+			continuing=true;
+		}
+	}
+}
+
+function neighboringNodes(d){
+             if (toggle==0){
+					     var neighborNames=[];
+						 node.each(function(o){
+						     if (isConnected(d,o)){
+							     if (d.name!=o.name){
+							         neighborNames.push(o.name);
+							         }
+								 }
+							});
+						 var neighborNamesList=neighborNames.join("<br />");
+    					 var tooltipDiv = document.getElementById('tooltip');
+    					     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
+    						 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connections: "+"</strong>"+"<br />"+neighborNamesList;
+    					     tooltipDiv.style.display = "block";
+						     d=d3.select(this).node().__data__;
+                             node.transition()
+							     .style("opacity",function(o){
+                                     return neighboring(d,o)|neighboring(o,d)? 0.9:0.1;
+                                    });
+                             link.transition()
+								 .style("stroke",function(o){
+								         return d.index==o.source.index | d.index==o.target.index? "#F50F0F":"#999999";
+										 })
+							     .style("opacity", function(o){
+                                     return d.index==o.source.index | d.index==o.target.index? 1:0.1;
+                                     });
+							toggle=1;
+				}else{
+				     var tooltipDiv=document.getElementById('tooltip');
+					      tooltipDiv.style.display="none";
+					node.style("opacity",0.9)
+						.attr("r",function(d){
+								 return d.size*13;
+							});
+                    link.style("opacity",1)
+                        .style("stroke","#999999")
+                        .style("stroke-width","2px");
+                     toggle=0;
+				}
+	}
+		
+  		 
+function crossOwnership(){
+     var cdoID=parseInt(cdoLink.value,10);
+	 var d=dataset.nodes[parseInt(bank.value,10)];
+			if (d!="undefined"){
+				if (cdoID==1){
+					var connected=[];
+						node.each(function(o){
+							if (isConnected(d,o)){
+								connected.push(o);
+							}
+						} 
+					);
+					node.transition()
+						.delay(100)
+						.duration(1000)
+						.style("stroke-opacity",function(o){
+                              thisOpacity=0.1;
+                             connected.forEach(function(e){
+                             if(e.group==2&e.size>=2&isConnected(e,o)){
+                                     thisOpacity=1;
+                                }
+                            });
+	
+                             this.setAttribute('fill-opacity',thisOpacity);
+                                 return thisOpacity;
+                        });
+					 
+					link.style("stroke-opacity",function(o){
+						thisOpacity=0.1;
+						connected.forEach(function(e){
+							if (e.group==2&e.size>=2){
+								if(o.source===e||o.target===e){
+                                 thisOpacity=1;
+                            }
+                         }
+						});
+                           return thisOpacity;
+                      })
+						.style("stroke",function(o){
+							thisColor="#999999";
+							connected.forEach(function(e){
+							if (e.group==2&e.size>=2){
+								if(o.source===e||o.target===e){
+								thisColor="red";
+										}
+								}
+							});
+							return thisColor;
+						})
+                     .style("stroke-width","2px");
+	    }
+		if (cdoID==2){
+                var connected=[];
+                node.each(function(o){
+                     if (isConnected(d,o)){
+                          connected.push(o);
+                         }
+                     } 
+                 );
+				 var connected1=[];
+			     node.each(function(o){
+			     connected.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected1.push(o);
+					     }
+				       }
+					 )
+				    }
+			     );
+				 
+				 var connected2=[];
+			     node.each(function(o){
+			     connected1.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected2.push(o);
+					     }
+				       }
+					 )
+				    }
+			     );
+				 
+                 node.transition()
+				     .delay(100)
+					 .duration(1000)
+				     .style("stroke-opacity",function(o){
+                              thisOpacity=0.1;
+                              connected2.forEach(function(e){
+                             if(e.group==2&e.size>=2&isConnected(e,o)){
+                                     thisOpacity=1;
+                                 }
+                             });
+	
+                         this.setAttribute('fill-opacity',thisOpacity);
+                                 return thisOpacity;
+                     });
+					 
+	             link.style("stroke-opacity",function(o){
+                      thisOpacity=0.1;
+                      connected2.forEach(function(e){
+					     if (e.group==2&e.size>=2){
+                         if(o.source===e||o.target===e){
+                              thisOpacity=1;
+                             }
+                         }
+						 });
+                      return thisOpacity;
+                      })
+                     .style("stroke",function(o){
+                         thisColor="#999999";
+                         connected2.forEach(function(e){
+						  if(e.group==2&e.size>=2){
+                           if(o.source===e||o.target===e){
+                             thisColor="red";
+                             }
+                         }
+						});
+                     return thisColor;
+                     })
+                     .style("stroke-width","2px");
+		}
+		if (cdoID==3){
+	         // direct neighbors
+	         var connected=[];
+			 node.each(function(o){
+			     if (isConnected(d,o)){
+				      connected.push(o);
+					  }
+				});
+			
+			// 2nd order neighbors and 1 CDO links
+			var connected1=[];
+			node.each(function(o){
+			     connected.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected1.push(o);
+					     }
+				    })
+				});
+	         
+			 // 3rd order neighbors
+			var connected2=[];
+			node.each(function(o){
+			     connected1.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected2.push(o);
+					     }
+				    }
+					)
+				}
+			);
+			
+			// 4th order neighbors and 2 CDO links
+			var connected3=[];
+			node.each(function(o){
+			     connected2.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected2.push(o);
+					     }
+				    }
+					)
+				}
+			);
+			
+			// 5th order neighbors
+		     var connected4=[];
+			 node.each(function(o){
+			     connected3.forEach(function(e){
+			         if (isConnected(e,o)){
+				         connected3.push(o);
+					     }
+				    }
+					)
+				}
+			);
+			
+			// 6th order neighbors and 3 CDO links
+			node.style("stroke-opacity",function(o){
+                     thisOpacity=0.1;
+                     connected4.forEach(function(e){
+                      if(e.group==2&e.size>=2&isConnected(e,o)){
+                          thisOpacity=1;
+                            }
+                        });
+	
+                         this.setAttribute('fill-opacity',thisOpacity);
+                                 return thisOpacity;
+                     });
+					 
+	             link.style("stroke-opacity",function(o){
+                      thisOpacity=0.1;
+                      connected4.forEach(function(e){
+					     if (e.group==2&e.size>=2){
+                         if(o.source===e||o.target===e){
+                              thisOpacity=1;
+                             }
+                         }
+						 });
+                      return thisOpacity;
+                      })
+                     .style("stroke",function(o){
+                         thisColor="#999999";
+                         connected4.forEach(function(e){
+						  if (e.group==2&e.size>=2){
+                           if(o.source===e||o.target===e){
+                             thisColor="red";
+                             }
+                        }
+						});
+                     return thisColor;
+                     })
+                     .style("stroke-width","2px");
+			}
+		}
+}
+
+function effectOfCdO(){
+         var  d=dataset.nodes[parseInt(cdo.value,10)];
+		 var  thresh=parseInt(document.getElementById("range").innerHTML,10);
+	     var  cuttingNumber=threshold(thresh);
+		 var  cdoNeighborIndex=[];
+		 var  nodeLeft=[];
+		 var  secondWave=[];
+		 for (i=0;i<parseInt(Object.keys(linkedByIndex).length,10);i++){
+	         if (Object.keys(linkedByIndex)[i][2]==cdo.value|Object.keys(linkedByIndex)[i][0]==cdo.value){
+                  cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][0]);
+                  cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][2]);
+		     }
+		}
+		 
+		for (var i=1;i<cdoNeighborIndex.length;i++){
+			if ((100/dataset.nodes[parseInt(cdoNeighborIndex[i],10)].size)>cuttingNumber){
+			         nodeLeft.push(dataset.nodes[parseInt(cdoNeighborIndex[i],10)]);
+			}
+		}
+
+		node.each(function(o){
+			nodeLeft.forEach(function(e){
+				if (isConnected(o,e)&&(!nodeLeft.includes(o))&&(100/o.size>cuttingNumber)){
+					secondWave.push(o);
+				}
+			})
+		});
+
+		nodeLeft.push(dataset.nodes[parseInt(cdoNeighborIndex[0],10)]);
+
+		var nodeCollect=nodeLeft.concat(secondWave);
+
+		console.log(secondWave);
+
+			         node.transition()
+				         .delay(100)
+				         .duration(3000)
+						 .style("opacity",function(o){
+						      return nodeCollect.includes(o)? 0.1:0.9;
+							});				 
+                     link.transition()
+				         .delay(100)
+				         .duration(3000)
+				         .style("opacity",function(o){
+			                     return d.index==o.source.index | d.index==o.target.index? 0.1:1;
+					             })
+                         .style("stroke-width","2px");	
+		             link.transition()
+                         .delay(100)
+                         .duration(3000)
+                         .style("opacity",function(o){
+						         return nodeCollect.includes(dataset.nodes[o.source.index])|nodeCollect.includes(dataset.nodes[o.target.index])?0.1:1;
+							});						 
+    }
+
+// This function looks up whether a pair are neighbors
+function neighboring(a,b){
+        return linkedByIndex[a.index+","+b.index];  // Use console.log to check the structure and name
+     }
+
+function isConnected(a,b){
+       return linkedByIndex[a.index+","+b.index]||linkedByIndex[b.index+","+a.index]||a.index==b.index;
+     } 
+
+// Set threshold to CDOs
+
+function threshold(thresh){
+     document.getElementById("range").innerHTML=thresh+" %";
+	 return thresh;
+}
+			  
+function reset(){
+    svg.remove();
+	var width=window.innerHeight*0.8,
+    	height=window.innerHeight*0.8;
+	var toggle=0; 
+
+ 	force=d3.layout.force()
+            .nodes(dataset.nodes)
+            .links(dataset.link)
+            .charge(-200)
+            .linkDistance(400)
+            .size([width,height])
+            .start();
+
+	svg=d3.select("body")
+          .append("svg")
+          .attr("width",width)
+          .attr("height",height)
+		  .on('dblclick',reset);
+		  
+ 	link=svg.selectAll(".link")
+            .data(dataset.link)
+            .enter()
+            .append("line")
+            .attr("class","link");
+
+ 	node=svg.selectAll(".node")
+             .data(dataset.nodes)
+			 .enter()
+			 .append("g")
+			 .attr("class","node")
+			 .call(force.drag);
+			 
+	node .append("circle")
+	     .attr("r", function(d){
+	                 return d.size*13;
+	                 })
+         .style("fill", function (d) {
+                 if (d.group==1){
+	                 return "rgba(63, 127, 191, 0.9)";
+	                 } else{
+	                        return "rgba(255, 229, 0, 0.9)";
+	                     }
+                    });
+	node.append("text")
+	    .attr("dx",-15)
+		.text(function(d){
+		     return d.name;
+			 });
+	node.on('click',neighboringNodes);
+	
+	tip=d3.select("text")
+          .append("div")
+          .attr("class","tooltip");
+		   
+// Add a legend
+	colordata=[{value:1,name:"Bank"},{value:2,name:"CDO"}];
+	legend = svg.selectAll('.legend')
+                .data(colordata)
+                .enter().append('g')
+                .attr('class', 'legend')
+                .attr('ID', function(d) { return d.name })
+                .attr("transform", function(d,i) {
+                        return "translate(" + 60 + "," + (i+3)*30 + ")";
+                });
+
+	legend.append("rect")
+		.attr('width', 25).attr('height', 20)
+		.attr('x', 30).attr('y', 5)
+		.style('fill', function(d) {
+			if (d.value==1){
+			return "rgba(63, 127, 191, 0.9)";
+			}
+			if (d.value==2){
+			return "rgba(255, 229, 0, 0.9)";
+			}
+		});
+
+	legend.append("text")
+		.attr('x', 70).attr('y', 19)
+		.text(function(d) { return d.name; })
+		.attr("stroke","black")
+		.style("font-size","14px");
+
+	force.on("tick",function(){
+	link.attr("x1",function(d){
+          return d.source.x;
+        })
+		.attr("y1",function(d){
+          return d.source.y;
+        })
+        .attr("x2",function (d){
+          return d.target.x;
+        })
+        .attr("y2",function(d){
+          return d.target.y;
+        });
+	node.attr("transform",function(d){
+		return "translate("+d.x+","+d.y+")";});
+		});
+
+ linkedByIndex={}; // this is an array to store nodes and its directly connected neighbors
+	for (i=0;i<dataset.nodes.length;i++){
+        linkedByIndex[i+","+i]=1;
+	};
+
+	dataset.link.forEach(function (d) {
+		linkedByIndex[d.source.index + "," + d.target.index] = 1;
+	});
+
+	cdo=document.getElementById('cdo');
+
+	cdoLink=document.getElementById("cdoOwnership");
+	bank=document.getElementById("bank");
+
+
+	bank1=document.getElementById("bankList1");
+	bank2=document.getElementById("bankList2");
+    
+    if (bank1.length==bank2.length){
+    	for (var i=0;i<bank1.length;i++){
+			bank1.options[i].disabled=false;
+			bank2.options[i].disabled=false;
+		}
+	}else{
+			for (var i=0;i<bank1.length;i++){
+			bank1.options[i].disabled=false;
+		}
+
+		for (var i=0;i<bank1.length;i++){
+			bank1.options[i].disabled=false;
+		}
+	}
+	
+	// go back to default
+    $('select').each(function() { this.selectedIndex = 0});
+    $('input').each(function() { this.value = 0, threshold(this.value)});
+}
+
+function resizePage(){
+                width = window.innerWidth * .8;
+                height = window.innerHeight * .8;
+                svg.attr("width", window.innerWidth*0.9);
+                svg.attr("height", window.innerHeight * .7);
+            }
+
+            </script>
+    </body>
+</html>
+ 
