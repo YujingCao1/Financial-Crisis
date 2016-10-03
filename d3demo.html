@@ -383,9 +383,7 @@ function calculateDistance(){
 			}
 		});
 
-	console.log(nodePath);
-
-	while(continuing==1){
+		while(continuing==1){
 		var addedNode=[];
 		if (nodePath.length>0){
 			node.each(function(o) {
@@ -395,28 +393,24 @@ function calculateDistance(){
 					}
 				})
 			});
-			console.log(addedNode);
 		}
 		nodePath=nodePath.concat(addedNode);
         if (nodePath.includes(dd)){
         	continuing=0;
         }
     }
-     console.log(nodePath);
+
 			nodePath.push(d);
 			node.style("opacity",function(o){
 				return nodePath.includes(o)? 0.9:0.1;
 			});
 			link.style("stroke", function(o){
-				console.log(o);
-					nodePath.forEach(function(e){
-						return (nodePath.includes(o.source))&(nodePath.includes(o.target))? "#F50F0F":"#999999";
-						})
+						return (nodePath.includes(o.source)&(nodePath.includes(o.target)))? "#F50F0F":"#999999";
 					})
 			 	.style("opacity", function(o){
-					nodePath.forEach(function(e){
-					return (nodePath.includes(o))&(o.target==e|o.source==e)? 0.9:0.1;})
+					return (nodePath.includes(o.source)&(nodePath.includes(o.target)))? 0.9:0.1;
 				});
+	
 }
 
 function neighboringNodes(d){
@@ -684,6 +678,7 @@ function effectOfCdO(){
 	     var  cuttingNumber=threshold(thresh);
 		 var  cdoNeighborIndex=[];
 		 var  nodeLeft=[];
+		 var count=1;
 
 		 for (i=0;i<parseInt(Object.keys(linkedByIndex).length,10);i++){
 	         if (Object.keys(linkedByIndex)[i][2]==cdo.value|Object.keys(linkedByIndex)[i][0]==cdo.value){
@@ -708,11 +703,10 @@ function effectOfCdO(){
 				})
 			});
 			nodeLeft=nodeLeft.concat(newNode);
-            console.log(nodeLeft);
-            console.log(newNode);
-            console.log((newNode.every(elem=>elem.size<=1)));
             if ((newNode.every(elem=>elem.size<=1))){
             	waveContinueing=0;
+            }else{
+            	count++;
             }
 
 		}
