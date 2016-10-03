@@ -38,7 +38,7 @@ If X percent of a bank's CDO fails, the bank will fail.
      <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
      <span id="range">0</span><br><br>
 	<label>Which CDO will fail: <br /><br /></label>
-     <select id="cdo" name="CDO_name" onchange="effectOfCdO()">
+     <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
 	 	<option selected value=-1>Select a CDO</option>
 	 	<option value=4>CDO1</option>
 	 	<option value=5>CDO2</option>
@@ -58,14 +58,14 @@ If X percent of a bank's CDO fails, the bank will fail.
              <li>For each bank X, within 1 CDO link, how many other banks is it related to?<br />
          </dd>
 		 <p>Choose the bank you would like to explore and the number of CDO links</p>
-         <select id="bank" name="Bank_explore" onchange="crossOwnership()">
+         <select id="bank" name="Bank_explore" onchange="crossOwnership();">
 		 	<option selected value=-1>Select a Bank</option>
          	<option value=0>Bank A</option>
          	<option value=1>Bank B</option>
          	<option value=2>Bank C</option> 
          	<option value=3>Bank D</option>
          </select>
-         <select id="cdoOwnership" name="CDO_Ownership" onchange="crossOwnership()">
+         <select id="cdoOwnership" name="CDO_Ownership" onchange="crossOwnership();">
 			 <option selected value=-1>Select The Number of CDO Links</option>
          	<option value=1>1</option>
          	<option value=2>2</option> 
@@ -76,7 +76,7 @@ If X percent of a bank's CDO fails, the bank will fail.
 <div id="distance">
 	<p>What is the shortest distance between the selected banks?<br /></p>
 	<div style="display:inline-block; vertical-align:center;">Shortest distance between </div>
-	<select id="bankList1" onchange="deactiveOption()">
+	<select id="bankList1" onchange="deactiveOption();">
 		<option selected value=-1> Select a Bank</option>
 		<option value=0>Bank A</option>
     	<option value=1>Bank B</option>
@@ -84,7 +84,7 @@ If X percent of a bank's CDO fails, the bank will fail.
     	<option value=3>Bank D</option>
 	</select>
 	<div style="display:inline-block; vertical-align:center;"> and</div>
-	<select id="bankList2" onchange="deactiveOption()">
+	<select id="bankList2" onchange="deactiveOption();calculateDistance();">
 		 <option selected value=-1>Select a Bank</option>
          <option value=0>Bank A</option>
          <option value=1>Bank B</option>
@@ -236,7 +236,7 @@ var toggle=0; // store whether the highlighting is on
 var force=d3.layout.force()
             .nodes(dataset.nodes)
             .links(dataset.link)
-            //.size([width,height])
+            .size([width,height])
             .start();
 
 
@@ -370,44 +370,53 @@ function deactiveOption(){
 	}
 }
 
+var continuing=1;
 function calculateDistance(){
 	var nodePath=[];
-	var continuing=true;
-    var d=bank1.value;
-    var dd=bank2.value;
+    var d=dataset.nodes[parseInt(bank1.value,10)];
+    var dd=dataset.nodes[parseInt(bank2.value,10)];
 
-	if (d!=-1&dataset.nodes[d].size>=1){
+
 		node.each(function(o){
-			if (isConnected(d,o)&o.size>1&o.name!=d.name){
+			if (isConnected(d,o)){
 				nodePath.push(o);
 			}
 		});
-	}
-	while(continuing){
+
+	console.log(nodePath);
+
+	while(continuing==1){
+		var addedNode=[];
 		if (nodePath.length>0){
 			node.each(function(o) {
 				nodePath.forEach(function(e){
 					if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name){
-						nodePath.push(o);
+						addedNode.push(o);
 					}
-				});
+				})
 			});
+			console.log(addedNode);
 		}
-		if (nodePath.includes(dataset.nodes[dd])){
+		nodePath=nodePath.concat(addedNode);
+        if (nodePath.includes(dd)){
+        	continuing=0;
+        }
+    }
+     console.log(nodePath);
 			nodePath.push(d);
 			node.style("opacity",function(o){
 				return nodePath.includes(o)? 0.9:0.1;
 			});
 			link.style("stroke", function(o){
-				nodePath.forEach(function(e){
-					return (nodePath.includes(o.source)&o.target==e)|(nodePath.includes(o.target)&o.source==e)? "#F50F0F":"#999999";
-				})
-			});
-			continuing=false;
-		}else{
-			continuing=true;
-		}
-	}
+				console.log(o);
+					nodePath.forEach(function(e){
+						return (nodePath.includes(o.source))&(nodePath.includes(o.target))? "#F50F0F":"#999999";
+						})
+					})
+			 	.style("opacity", function(o){
+					nodePath.forEach(function(e){
+					return (nodePath.includes(o))&(o.target==e|o.source==e)? 0.9:0.1;})
+				});
 }
 
 function neighboringNodes(d){
@@ -452,7 +461,7 @@ function neighboringNodes(d){
 				}
 	}
 		
-  		 
+ // There should be a way to optimize function crossOwnership. 
 function crossOwnership(){
      var cdoID=parseInt(cdoLink.value,10);
 	 var d=dataset.nodes[parseInt(bank.value,10)];
@@ -668,45 +677,65 @@ function crossOwnership(){
 		}
 }
 
+var waveContinueing=1;
 function effectOfCdO(){
          var  d=dataset.nodes[parseInt(cdo.value,10)];
 		 var  thresh=parseInt(document.getElementById("range").innerHTML,10);
 	     var  cuttingNumber=threshold(thresh);
 		 var  cdoNeighborIndex=[];
 		 var  nodeLeft=[];
-		 var  secondWave=[];
+
 		 for (i=0;i<parseInt(Object.keys(linkedByIndex).length,10);i++){
 	         if (Object.keys(linkedByIndex)[i][2]==cdo.value|Object.keys(linkedByIndex)[i][0]==cdo.value){
                   cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][0]);
                   cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][2]);
 		     }
 		}
-		 
-		for (var i=1;i<cdoNeighborIndex.length;i++){
+
+	for (var i=1;i<cdoNeighborIndex.length;i++){
 			if ((100/dataset.nodes[parseInt(cdoNeighborIndex[i],10)].size)>cuttingNumber){
 			         nodeLeft.push(dataset.nodes[parseInt(cdoNeighborIndex[i],10)]);
 			}
 		}
 
-		node.each(function(o){
-			nodeLeft.forEach(function(e){
-				if (isConnected(o,e)&&(!nodeLeft.includes(o))&&(100/o.size>cuttingNumber)){
-					secondWave.push(o);
+		while (waveContinueing==1){
+			var newNode=[];
+			node.each(function(o){
+				nodeLeft.forEach(function(e){
+					if (isConnected(o,e)&(!nodeLeft.includes(o))&(100/o.size>cuttingNumber)){
+						newNode.push(o);
+					}
+				})
+			});
+			nodeLeft=nodeLeft.concat(newNode);
+            console.log(nodeLeft);
+            console.log(newNode);
+            console.log((newNode.every(elem=>elem.size<=1)));
+            if ((newNode.every(elem=>elem.size<=1))){
+            	waveContinueing=0;
+            }
+
+		}
+         
+         nodeLeft.push(d);
+
+		for (var i=0; i<node.length; i++){
+			var count=0;
+			for (var j=0; j<nodeLeft.length; j++){
+				if (isConnected(dataset.nodes[i],nodeLeft[j])){
+					count++;
 				}
-			})
-		});
+			}
+			if (((100/dataset.nodes[i].size)*count)>cuttingNumber){
+				nodeLeft.push(dataset.nodes[i]);
+			}
+		}
 
-		nodeLeft.push(dataset.nodes[parseInt(cdoNeighborIndex[0],10)]);
-
-		var nodeCollect=nodeLeft.concat(secondWave);
-
-		console.log(secondWave);
-
-			         node.transition()
+			      	node.transition()
 				         .delay(100)
 				         .duration(3000)
 						 .style("opacity",function(o){
-						      return nodeCollect.includes(o)? 0.1:0.9;
+						      return nodeLeft.includes(o)? 0.1:0.9;
 							});				 
                      link.transition()
 				         .delay(100)
@@ -719,7 +748,7 @@ function effectOfCdO(){
                          .delay(100)
                          .duration(3000)
                          .style("opacity",function(o){
-						         return nodeCollect.includes(dataset.nodes[o.source.index])|nodeCollect.includes(dataset.nodes[o.target.index])?0.1:1;
+						         return nodeLeft.includes(dataset.nodes[o.source.index])|nodeLeft.includes(dataset.nodes[o.target.index])?0.1:1;
 							});						 
     }
 
