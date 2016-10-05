@@ -680,33 +680,34 @@ function effectOfCdO(){
 		 var  cdoNeighborPartial=[];
 		 var  waveContinueing=1;
 		 var  secondWave=1;
-		 var checking=1;
-		 var nodeLeft=[];
-	
+		 var  checking=1;
+		 var  nodeLeft=[];
+	 
+	 // all the neighbors of node d
         node.each(function(o){
         	if (isConnected(d,o)){
         		cdoNeighborIndex.push(o);
         	}
         });
-		
-		console.log(cdoNeighborIndex);
 
+       // the neighbors which fail directoy after d fails
 		node.each(function(o){
 			if (isConnected(d,o)&&(100/o.size>cuttingNumber)){
 				cdoNeighborPartial.push(o);
 			}
 		});
 
-		console.log(cdoNeighborPartial);
-
+		
+		// Check if other direct neighbors will fail
         if (d.size==1&&cdoNeighborIndex.splice(d,1).every(elem => elem.size>100/cuttingNumber)){
         	nodeLeft.push(d);
         }else{
      	if (cdoNeighborIndex.length!=cdoNeighborPartial.length&&cdoNeighborPartial.length!=0){
-     		cdoNeighborPartial.push(d);
+     		//cdoNeighborPartial.push(d);
         	while(checking==1){
-        		var counting=0;
+        		
         		for (i=0; i<cdoNeighborIndex.length; i++){
+        			var counting=0;
         			for (j=0 ; j<cdoNeighborPartial.length; j++){
         				if (isConnected(cdoNeighborIndex[i],cdoNeighborPartial[j])&&(!cdoNeighborPartial.includes(cdoNeighborIndex[i]))){
         					counting++;
@@ -727,15 +728,20 @@ function effectOfCdO(){
 
         				}
         			}
+
         			if (nodeChecking.length==0){
         				checking=0;
         			}
         		}
         	}
+
+
+        // Find undirect neighbors which will fail
 		for (var i=0;i<cdoNeighborPartial.length;i++){
 			         nodeLeft.push(cdoNeighborPartial[i]);
 		}
     	
+
     	var cc=0;
 
 		while (waveContinueing==1){
@@ -761,7 +767,7 @@ function effectOfCdO(){
             		cc++;
             	}
 			}
-           
+       // Find the nodes which fail because its neighbors fails.    
   while(secondWave==1){
   	for (var i=0; i<dataset.nodes.length; i++){
 			var count=0;
@@ -771,8 +777,6 @@ function effectOfCdO(){
 					count++;
 				}
 			}
-
-			//document.write(count+"<br>");
 
 			if ((((100/dataset.nodes[i].size)*count)>cuttingNumber)&&(!nodeLeft.includes(dataset.nodes[i]))){
 				nodeLeft.push(dataset.nodes[i]);
@@ -795,14 +799,9 @@ function effectOfCdO(){
      }
     }    
 		
-        
-        /*nodeLeft.forEach(function(e){
-        	document.write(e.name+"<br>");
-        })
-        */
-
         nodeLeft.push(d);
 
+        // Fade out the failing nodes and its edges.
 			      	node.transition()
 				         .delay(100)
 				         .duration(3000)
