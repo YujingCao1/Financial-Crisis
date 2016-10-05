@@ -671,68 +671,137 @@ function crossOwnership(){
 		}
 }
 
-var waveContinueing=1
+
 function effectOfCdO(){
          var  d=dataset.nodes[parseInt(cdo.value,10)];
 		 var  thresh=parseInt(document.getElementById("range").innerHTML,10);
 	     var  cuttingNumber=threshold(thresh);
 		 var  cdoNeighborIndex=[];
-		 var  nodeLeft= new Array();
-         
-         console.log(nodeLeft);
-	/*
-		 for (i=0;i<parseInt(Object.keys(linkedByIndex).length,10);i++){
-	         if ((Object.keys(linkedByIndex)[i][2]==cdo.value)|(Object.keys(linkedByIndex)[i][0]==cdo.value)){
-                  cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][0]);
-                  cdoNeighborIndex.push(Object.keys(linkedByIndex)[i][2]);
-		     }
-		}
-	*/
+		 var  cdoNeighborPartial=[];
+		 var  waveContinueing=1;
+		 var  secondWave=1;
+		 var  checking=1;
+		 var  nodeLeft=[];
+	 
+	 // all the neighbors of node d
         node.each(function(o){
         	if (isConnected(d,o)){
         		cdoNeighborIndex.push(o);
         	}
         });
-		
-		for (var i=0;i<cdoNeighborIndex.length;i++){
-			if ((100/cdoNeighborIndex[i].size)>cuttingNumber){
-			         nodeLeft.push(cdoNeighborIndex[i]);
+
+       // the neighbors which fail directoy after d fails
+		node.each(function(o){
+			if (isConnected(d,o)&&(100/o.size>cuttingNumber)){
+				cdoNeighborPartial.push(o);
 			}
+		});
+
+		
+		// Check if other direct neighbors will fail
+        if (d.size==1&&cdoNeighborIndex.splice(d,1).every(elem => elem.size>100/cuttingNumber)){
+        	nodeLeft.push(d);
+        }else{
+     	if (cdoNeighborIndex.length!=cdoNeighborPartial.length&&cdoNeighborPartial.length!=0){
+     		//cdoNeighborPartial.push(d);
+        	while(checking==1){
+        		
+        		for (i=0; i<cdoNeighborIndex.length; i++){
+        			var counting=0;
+        			for (j=0 ; j<cdoNeighborPartial.length; j++){
+        				if (isConnected(cdoNeighborIndex[i],cdoNeighborPartial[j])&&(!cdoNeighborPartial.includes(cdoNeighborIndex[i]))){
+        					counting++;
+        				}
+        			}
+        			if (((100/cdoNeighborIndex[i].size)*counting)>cuttingNumber){
+        				cdoNeighborPartial.push(cdoNeighborIndex[i]);
+        			}
+        		}
+
+        		var nodeChecking=[];
+        		for (i=0; i<cdoNeighborIndex.length; i++){
+        			for (j=0 ; j<cdoNeighborPartial.length; j++){
+        				if (isConnected(cdoNeighborIndex[i],cdoNeighborPartial[j])&&(!cdoNeighborPartial.includes(cdoNeighborIndex[i]))&&(cdoNeighborIndex[i].size)<(100/cuttingNumber)){
+
+        					nodeChecking.push(cdoNeighborIndex[i]);
+        					}
+
+        				}
+        			}
+
+        			if (nodeChecking.length==0){
+        				checking=0;
+        			}
+        		}
+        	}
+
+
+        // Find undirect neighbors which will fail
+		for (var i=0;i<cdoNeighborPartial.length;i++){
+			         nodeLeft.push(cdoNeighborPartial[i]);
 		}
-    
+    	
+
+    	var cc=0;
+
 		while (waveContinueing==1){
 			var newNode=[];
 			node.each(function(o){
 				nodeLeft.forEach(function(e){
-					if (isConnected(o,e)&(!nodeLeft.includes(o))&(100/o.size)>cuttingNumber){
-						newNode.push(o);
+					if (isConnected(o,e)&&(!nodeLeft.includes(o))&&(100/o.size)>cuttingNumber&&(!nodeLeft.includes(o))){
+							newNode.push(o);
 					}
 				})
 			});
-			    if (newNode.length>0){
-			    	for (i=0;i<newNode.length;i++){
-			    		nodeLeft.push(newNode[i]);
+
+
+			if (newNode.length>0){
+			    for (i=0;i<newNode.length;i++){
+			    	nodeLeft.push(newNode[i]);
 			    	}
 			    }
-			    
 
-           		if ((newNode.every(elem=>elem.size<=1))){
+           	if ((newNode.every(elem => elem.size <= 1))){
             		waveContinueing=0;
+            	}else{
+            		cc++;
             	}
 			}
-
-		for (var i=0; i<dataset.nodes.length; i++){
+       // Find the nodes which fail because its neighbors fails.    
+  while(secondWave==1){
+  	for (var i=0; i<dataset.nodes.length; i++){
 			var count=0;
 			for (var j=0; j<nodeLeft.length; j++){
-				if (isConnected(dataset.nodes[i],nodeLeft[j])&dataset.nodes[i]!=nodeLeft[j]){
+
+				if (isConnected(dataset.nodes[i],nodeLeft[j])&&dataset.nodes[i]!=nodeLeft[j]){
 					count++;
 				}
 			}
-			if ((100/dataset.nodes[i].size)*count>cuttingNumber){
+
+			if ((((100/dataset.nodes[i].size)*count)>cuttingNumber)&&(!nodeLeft.includes(dataset.nodes[i]))){
 				nodeLeft.push(dataset.nodes[i]);
 			}
 		}
-        
+            
+            var nodeElse=[];
+			for (var i=0; i<dataset.nodes.length; i++){
+				for (var j=0; j<nodeLeft.length; j++){
+					if (isConnected(dataset.nodes[i],nodeLeft[j])&&(!nodeLeft.includes(dataset.nodes[i]))&&dataset.nodes[i].size<(100/cuttingNumber)){
+						nodeElse.push(dataset.nodes[i]);
+					}
+				}
+			}
+
+			if (nodeElse.length==0){
+				secondWave=0;
+			}	
+
+     }
+    }    
+		
+        nodeLeft.push(d);
+
+        // Fade out the failing nodes and its edges.
 			      	node.transition()
 				         .delay(100)
 				         .duration(3000)
