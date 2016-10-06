@@ -74,8 +74,8 @@ If X percent of a bank's CDO fails, the bank will fail.
 </div>
 
 <div id="distance">
-	<p>What is the shortest distance between the selected banks?<br /></p>
-	<div style="display:inline-block; vertical-align:center;">Shortest distance between </div>
+	<p>What is the shortest path between the selected banks?<br /></p>
+	<div style="display:inline-block; vertical-align:center;">Shortest path between </div>
 	<select id="bankList1" onchange="deactiveOption();">
 		<option selected value=-1> Select a Bank</option>
 		<option value=0>Bank A</option>
@@ -91,9 +91,9 @@ If X percent of a bank's CDO fails, the bank will fail.
          <option value=2>Bank C</option> 
          <option value=3>Bank D</option>
          </select>
-    <div style="display: inline-block; vertical-align: center;"> is</div>
+    <div style="display: inline-block; vertical-align: center;"> contains</div>
     <input type="text" name="shortestDistance" value=" " id="path"/>
-    <div style="display: inline-block; vertical-align: center;"> CDOs</div>
+    <div style="display: inline-block; vertical-align: center;"> CDOs and banks</div>
 
 </div>
 
@@ -371,46 +371,74 @@ function deactiveOption(){
 }
 
 var continuing=1;
+var continuing2=1;
 function calculateDistance(){
 	var nodePath=[];
+	var nodePath2=[];
     var d=dataset.nodes[parseInt(bank1.value,10)];
     var dd=dataset.nodes[parseInt(bank2.value,10)];
 
-
+    // from d to dd
 		node.each(function(o){
 			if (isConnected(d,o)){
-				nodePath.push(o);
+				if (o.size>1){
+					nodePath.push(o);
+				}
 			}
 		});
 
 		while(continuing==1){
-		var addedNode=[];
-		if (nodePath.length>0){
-			node.each(function(o) {
-				nodePath.forEach(function(e){
-					if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name){
-						addedNode.push(o);
-					}
-				})
-			});
-		}
-		nodePath=nodePath.concat(addedNode);
-        if (nodePath.includes(dd)){
-        	continuing=0;
-        }
-    }
+			var addedNode=[];
+			if (nodePath.length>0){
+				node.each(function(o) {
+					nodePath.forEach(function(e){
+						if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name&o.size>1){
+							addedNode.push(o);
+						}
+					})
+				});
+			}
+			nodePath=nodePath.concat(addedNode);
+        	if (nodePath.includes(dd)){
+        		continuing=0;
+        	}
+    	}
 
-			nodePath.push(d);
-			node.style("opacity",function(o){
-				return nodePath.includes(o)? 0.9:0.1;
+
+
+             var remainingNode=[];
+            for (var i=0; i<nodePath.length; i++){
+            	var countConnection=0;
+            	for (var j=0; j<nodePath.length; j++){
+            		if ((nodePath[i]!=nodePath[j])&isConnected(nodePath[i],nodePath[j])){
+            			countConnection++;
+            		}
+            	}
+            	if ((countConnection>1)){
+            			remainingNode.push(nodePath[i]);
+            		}
+            }
+
+
+			if (!remainingNode.includes(d)){
+				remainingNode.push(d);
+			}
+
+			if (!remainingNode.includes(dd)){
+				remainingNode.push(dd);
+			}
+           
+ 		
+			
+		    	node.style("opacity",function(o){
+				return remainingNode.includes(o)? 0.9:0.1;
 			});
 			link.style("stroke", function(o){
-						return (nodePath.includes(o.source)&(nodePath.includes(o.target)))? "#F50F0F":"#999999";
+						return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? "#F50F0F":"#999999";
 					})
 			 	.style("opacity", function(o){
-					return (nodePath.includes(o.source)&(nodePath.includes(o.target)))? 0.9:0.1;
+					return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? 0.9:0.1;
 				});
-	
 }
 
 function neighboringNodes(d){
@@ -463,116 +491,109 @@ function crossOwnership(){
 				if (cdoID==1){
 					var connected=[];
 						node.each(function(o){
-							if (isConnected(d,o)){
+							if (isConnected(d,o)&&o.group==2&&o!=d){
 								connected.push(o);
 							}
 						} 
 					);
+
+					
+                    var nodeHightlight=[];
+					node.each(function(o){
+						for (var i=0; i<connected.length; i++){
+							if (o.group==1&&isConnected(o,connected[i])&&o!=d){
+								nodeHightlight.push(o);
+								nodeHightlight.push(connected[i]);
+							}
+						}
+					});
+                    
+                    if (!nodeHightlight.includes(d)){
+                    	nodeHightlight.push(d)
+                    }
+
 					node.transition()
 						.delay(100)
 						.duration(1000)
-						.style("stroke-opacity",function(o){
-                              thisOpacity=0.1;
-                             connected.forEach(function(e){
-                             if(e.group==2&e.size>=2&isConnected(e,o)){
-                                     thisOpacity=1;
-                                }
-                            });
-	
-                             this.setAttribute('fill-opacity',thisOpacity);
-                                 return thisOpacity;
+						.style("opacity",function(o){
+                             return nodeHightlight.includes(o)? 0.9:0.1;
                         });
 					 
-					link.style("stroke-opacity",function(o){
-						thisOpacity=0.1;
-						connected.forEach(function(e){
-							if (e.group==2&e.size>=2){
-								if(o.source===e||o.target===e){
-                                 thisOpacity=1;
-                            }
-                         }
-						});
-                           return thisOpacity;
+					link.style("opacity",function(o){
+						return nodeHightlight.includes(o.source)&&nodeHightlight.includes(o.target)? 0.9:0.1;
                       })
 						.style("stroke",function(o){
-							thisColor="#999999";
-							connected.forEach(function(e){
-							if (e.group==2&e.size>=2){
-								if(o.source===e||o.target===e){
-								thisColor="red";
-										}
-								}
-							});
-							return thisColor;
-						})
-                     .style("stroke-width","2px");
+							return nodeHightlight.includes(o.source)&&nodeHightlight.includes(o.target)? "red":"#999999";
+						});
 	    }
 		if (cdoID==2){
                 var connected=[];
                 node.each(function(o){
-                     if (isConnected(d,o)){
+                     if (isConnected(d,o)&&o.group==2){
                           connected.push(o);
                          }
                      } 
                  );
+
+                
 				 var connected1=[];
 			     node.each(function(o){
-			     connected.forEach(function(e){
-			         if (isConnected(e,o)){
+			     	connected.forEach(function(e){
+			         	if (isConnected(e,o)&&o.group==1&&o!=d){
 				         connected1.push(o);
+				         connected1.push(e);
 					     }
 				       }
 					 )
 				    }
 			     );
 				 
+			
+
 				 var connected2=[];
 			     node.each(function(o){
-			     connected1.forEach(function(e){
-			         if (isConnected(e,o)){
-				         connected2.push(o);
+			     	connected1.forEach(function(e){
+			         	if (isConnected(e,o)&&o.group==2&&e.group==1&&(!connected2.includes(o))){
+				         	connected2.push(o);
+				         	connected2.push(e);
 					     }
 				       }
 					 )
 				    }
 			     );
-				 
+                 
+        
+			     var connected3=[];
+			     node.each(function(o){
+			     	connected2.forEach(function(e){
+			     		if(isConnected(o,e)&&e.group==2&&o.group==1&&(!connected2.includes(o))){
+			     			connected3.push(o);
+			     			connected3.push(e);
+			     		}
+			     		if (e.group==1&&(!connected3.includes(e))){
+			     			connected3.push(e);
+			     		}
+			     	})
+			     });
+
+			     if (!connected3.includes(d)){
+			     	connected3.push(d);
+			     }
+
+
+
                  node.transition()
 				     .delay(100)
 					 .duration(1000)
-				     .style("stroke-opacity",function(o){
-                              thisOpacity=0.1;
-                              connected2.forEach(function(e){
-                             if(e.group==2&e.size>=2&isConnected(e,o)){
-                                     thisOpacity=1;
-                                 }
+				     .style("opacity",function(o){
+                             return connected3.includes(o)? 0.9:0.1;
                              });
-	
-                         this.setAttribute('fill-opacity',thisOpacity);
-                                 return thisOpacity;
-                     });
 					 
-	             link.style("stroke-opacity",function(o){
-                      thisOpacity=0.1;
-                      connected2.forEach(function(e){
-					     if (e.group==2&e.size>=2){
-                         if(o.source===e||o.target===e){
-                              thisOpacity=1;
-                             }
-                         }
-						 });
-                      return thisOpacity;
+	             link.style("opacity",function(o){
+                      return connected3.includes(o.source)&&connected3.includes(o.target)? 0.9:0.1;
                       })
                      .style("stroke",function(o){
-                         thisColor="#999999";
-                         connected2.forEach(function(e){
-						  if(e.group==2&e.size>=2){
-                           if(o.source===e||o.target===e){
-                             thisColor="red";
-                             }
-                         }
-						});
-                     return thisColor;
+                         return connected3.includes(o.source)&&connected3.includes(o.target)? "red":"#999999";
                      })
                      .style("stroke-width","2px");
 		}
