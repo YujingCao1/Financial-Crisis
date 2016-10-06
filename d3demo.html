@@ -100,7 +100,7 @@ If X percent of a bank's CDO fails, the bank will fail.
 
 <div id="tooltip"></div>
 <div id="container"></div>
-<input type="button" name="newgraph" value="CDO are connected" class="redraw" onclick="addEdges();" />
+<input type="button" name="newgraph" value="CDOs are connected" id="redraw" onclick="addEdges();" />
 
 <script type="text/javascript">
 
@@ -1102,6 +1102,7 @@ function reset(){
 	// go back to default
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
+    document.getElementById('redraw').value="CDOs are connected";
     document.getElementById('path').value="";
 }
 
