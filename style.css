@@ -151,11 +151,25 @@ text {
 	padding: 20px;
 	text-align: left;
 	width: 150px;
-	top: 12%;
+	top: 13%;
 	right: 0.4%;
 	position: fixed;
 	height:auto;
 	line-height: 200%;
 	font-family: "Source Sans Pro";
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.redraw{
+	float: right;
+	position: absolute;
+	top: 18%;
+	left: 45%;
+	text-align: center;
+	display: inline-block;
+	background-color: rgba(26, 139, 239, 0.6);
+	border-color: steelblue;
+	border-radius: 7px;
+	font-size: 15px;
+	border-width: 3px;
 }
