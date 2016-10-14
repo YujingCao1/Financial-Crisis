@@ -385,6 +385,7 @@ function shortestPath(){
 	var ending=dataset.nodes[parseInt(bank2.value,10)];
 	var directNeighbors=[];
     var containEnding=1;
+
 	// Find direct neighbors
 	node.each(function(d){
 		if(isConnected(d,starting)&&d!=starting&&d.size>1){
@@ -415,9 +416,20 @@ function shortestPath(){
  					storing.push(d);
  				}
  			});
- 					nodePath[i].push(storing[0]);
- 			 }
- 		}
+                    
+                        nodePath[i].push(storing[0]);
+                    
+
+                        // for (var newPath=0; newPath<storing.length; newPath++){
+                        //     for (var mm=0; mm<nodePath[i].length; mm++){
+                        //         nodePath[nodePath.length]=new Array();
+                        //         nodePath[nodePath.length-1].push(nodePath[i][mm]);
+                        //     }
+                        //     nodePath[nodePath.length-1].push(storing[newPath]);
+                        // }
+                    
+                }
+            }
          
          var temp=[];
  		for (var j=0; j<nodePath.length; j++){
@@ -425,10 +437,12 @@ function shortestPath(){
  				temp.push(0)
  			}
  		}
+
  		if (temp.includes(0)){
  			containEnding=0;
  		}
- 	}
+    }
+    
 
  	var nodeInPath=[];
  	var comparing=nodePath[0].length;
