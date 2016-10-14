@@ -345,8 +345,10 @@ var bank=document.getElementById("bank");
 var bank1=document.getElementById("bankList1");
 var bank2=document.getElementById("bankList2");
 
+var adding=0;
 function addEdges(){
-	dataset.link.push(
+    if (adding==0){
+        dataset.link.push(
          {
          source: 5, 
          target: 6
@@ -356,8 +358,17 @@ function addEdges(){
          target: 7
          });
     reset();
-
+    adding=1;
+    document.getElementById("redraw").value="CDO are NOT connected";
+    }else{
+        dataset.link.splice(dataset.link.length-2,2);
+        reset();
+        adding=0;
+    document.getElementById("redraw").value="CDO are connected";
+    }
 }
+
+console.log(adding);
 function deactiveOption(){
 
 	var d=bank1.value;
@@ -983,7 +994,7 @@ function reset(){
 	var width=window.innerWidth,
     	height=window.innerHeight;
 	var toggle=0; 
-
+    var adding=0;
  	force=d3.layout.force()
             .nodes(dataset.nodes)
             .links(dataset.link)
