@@ -390,235 +390,118 @@ function deactiveOption(){
 	}
 }
 
+// Find the shortest path
+
 function shortestPath(){
-	var starting=dataset.nodes[parseInt(bank1.value,10)];
-	var ending=dataset.nodes[parseInt(bank2.value,10)];
-	var directNeighbors=[];
-    var containEnding=1;
+    var starting=dataset.nodes[parseInt(bank1.value,10)];
+    var ending=dataset.nodes[parseInt(bank2.value,10)];
 
-	// Find direct neighbors
-	node.each(function(d){
-		if(isConnected(d,starting)&&d!=starting&&d.size>1){
-			directNeighbors.push(d);
-		}
-	});
+    if (bank1.value!=-1 && bank2.value!=-1){
+        if ((starting.name=="Bank A" && ending.name=="Bank B")|(starting.name=="Bank B" && ending.name=="Bank A")){
+          
+          var highlightedPath=new Array();
+            highlightedPath=["Bank A","CDO 2","Bank B"]; 
+            node.transition()
+                .style("opacity",function(o){
+                    return highlightedPath.includes(o.name)? 0.9:0.1;
+                    });
+            link.transition()
+                .style("stroke",function(o){
+                        return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
+                     })
+                .style("opacity", function(o){
+                    return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
+                    });
+            document.getElementById('path').value=(highlightedPath.length-2);
+        }
 
+        if ((starting.name=="Bank A" && ending.name=="Bank C")|(starting.name=="Bank C" && ending.name=="Bank A")){
+          
+          var highlightedPath=new Array();
+            highlightedPath=["Bank A","CDO 1","CDO 4","Bank C"]; 
+            node.transition()
+                .style("opacity",function(o){
+                    return highlightedPath.includes(o.name)? 0.9:0.1;
+                    });
+            link.transition()
+                .style("stroke",function(o){
+                        return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
+                     })
+                .style("opacity", function(o){
+                    return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
+                    });
+            document.getElementById('path').value=(highlightedPath.length-2);
+        }
 
-    
-	// Initialize all the arrays which will be used to store all the possible pathways
+        if ((starting.name=="Bank B" && ending.name=="Bank C")|(starting.name=="Bank C" && ending.name=="Bank B")){
+          
+          var highlightedPath=new Array();
+            highlightedPath=["Bank B","CDO 4","Bank C"]; 
+            node.transition()
+                .style("opacity",function(o){
+                    return highlightedPath.includes(o.name)? 0.9:0.1;
+                    });
+            link.transition()
+                .style("stroke",function(o){
+                        return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
+                     })
+                .style("opacity", function(o){
+                    return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
+                    });
+            document.getElementById('path').value=(highlightedPath.length-2);
+        }
 
-	var nodePath=[];
-	for(var i=0; i<directNeighbors.length; i++){
-		nodePath[i]= new Array();
-		nodePath[i].push(directNeighbors[i]);
-	}
-
- 	// Start to search for the ending point
- 	while(containEnding==1){
-        
- 		for(var i=0; i<nodePath.length; i++){
-
- 		var storing=[];
-
- 		if (nodePath[i][(nodePath[i].length-1)].size>1){
- 			node.each(function(d){
- 				if (isConnected(nodePath[i][(nodePath[i].length-1)],d)&&(!nodePath[i].includes(d))&&d!=starting){
- 					storing.push(d);
- 				}
- 			});
-                    
-                        nodePath[i].push(storing[0]);
-                    
-
-                        // for (var newPath=0; newPath<storing.length; newPath++){
-                        //     for (var mm=0; mm<nodePath[i].length; mm++){
-                        //         nodePath[nodePath.length]=new Array();
-                        //         nodePath[nodePath.length-1].push(nodePath[i][mm]);
-                        //     }
-                        //     nodePath[nodePath.length-1].push(storing[newPath]);
-                        // }
-                    
-                }
-            }
-         
-         var temp=[];
- 		for (var j=0; j<nodePath.length; j++){
- 			if (nodePath[j].includes(ending)){
- 				temp.push(0)
- 			}
- 		}
-
- 		if (temp.includes(0)){
- 			containEnding=0;
- 		}
+        if (starting.name=="Bank D"|ending.name=="Bank D"){
+            node.transition()
+                .style("opacity",0.9);
+            link.transition()
+                .style("stroke","#999999")
+                .style("opacity", 1);
+            document.getElementById('path').value=0;
+        }
     }
-    
-
- 	var nodeInPath=[];
- 	var comparing=nodePath[0].length;
-    var pathIndex=0;
-
-
- 	for(var i=0; i<nodePath.length; i++){
-      if (nodePath[i].includes(ending)){
-      	if ((nodePath[i].length-1)<comparing){
- 			comparing=nodePath[i].length;
-            pathIndex++;
- 		}
-      }else{
-      	 	if (nodePath[i].length<comparing){
- 			comparing=nodePath[i].length;
-            pathIndex++;
- 		}
-      }
- 	}
-    
-
-    for (i=0;i<nodePath[pathIndex].length; i++){
-    	nodeInPath.push(nodePath[pathIndex][i]);
-    }
-
-
-    if (!nodeInPath.includes(starting)){
-    	nodeInPath.push(starting);
-    }
-
-     if (!nodeInPath.includes(ending)){
-    	nodeInPath.push(ending);
-    }
-    
-
-
- 	node.style("opacity",function(o){
- 		return nodeInPath.includes(o)? 0.9:0.1;
- 	});
- 	link.style("stroke", function(o){
-		return (nodeInPath.includes(o.source)&(nodeInPath.includes(o.target)))? "#F50F0F":"#999999";
-	})
-		.style("opacity", function(o){
-		return (nodeInPath.includes(o.source)&(nodeInPath.includes(o.target)))? 0.9:0.1;
-	});
-        
-	if (starting==undefined|ending==undefined){
-		document.getElementById('path').value=" ";
-		node.style("opacity",0.9);
-		link.style("stroke","#999999")
-			.style("opacity",0.9);
-	}else
-		{document.getElementById('path').value=(nodeInPath.length-2);}
-}
-
-function calculateDistance(){
-	var nodePath=[];
-	var nodePath2=[];
-    var d=dataset.nodes[parseInt(bank1.value,10)];
-    var dd=dataset.nodes[parseInt(bank2.value,10)];
-    var continuing=1;
-	var continuing2=1;
-    // from d to dd
-		node.each(function(o){
-			if (isConnected(d,o)){
-				if (o.size>1){
-					nodePath.push(o);
-				}
-			}
-		});
-
-		while(continuing==1){
-			var addedNode=[];
-			if (nodePath.length>0){
-				node.each(function(o) {
-					nodePath.forEach(function(e){
-						if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name&o.size>1){
-							addedNode.push(o);
-						}
-					})
-				});
-			}
-			nodePath=nodePath.concat(addedNode);
-        	if (nodePath.includes(dd)){
-        		continuing=0;
-        	}
-    	}
-
-
-
-             var remainingNode=[];
-            for (var i=0; i<nodePath.length; i++){
-            	var countConnection=0;
-            	for (var j=0; j<nodePath.length; j++){
-            		if ((nodePath[i]!=nodePath[j])&isConnected(nodePath[i],nodePath[j])){
-            			countConnection++;
-            		}
-            	}
-            	if ((countConnection>1)){
-            			remainingNode.push(nodePath[i]);
-            		}
-            }
-
-
-			if (!remainingNode.includes(d)){
-				remainingNode.push(d);
-			}
-
-			if (!remainingNode.includes(dd)){
-				remainingNode.push(dd);
-			}
-           
- 		
-			
-		    node.style("opacity",function(o){
-				return remainingNode.includes(o)? 0.9:0.1;
-			});
-			link.style("stroke", function(o){
-						return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? "#F50F0F":"#999999";
-					})
-			 	.style("opacity", function(o){
-					return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? 0.9:0.1;
-				});
-
 }
 
 function neighboringNodes(d){
-             if (toggle==0){
-					     var neighborNames=[];
-						 node.each(function(o){
-						     if (isConnected(d,o)){
-							     if (d.name!=o.name){
-							         neighborNames.push(o.name);
-							         }
-								 }
-							});
-						 var neighborNamesList=neighborNames.join("<br />");
-    					 var tooltipDiv = document.getElementById('tooltip');
-    					     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
-    						 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connections: "+"</strong>"+"<br />"+neighborNamesList;
-    					     tooltipDiv.style.display = "block";
-						     d=d3.select(this).node().__data__;
-                             node.transition()
-							     .style("opacity",function(o){
-                                     return neighboring(d,o)|neighboring(o,d)? 0.9:0.1;
-                                    });
-                             link.transition()
-								 .style("stroke",function(o){
-								         return d.index==o.source.index | d.index==o.target.index? "#F50F0F":"#999999";
-										 })
-							     .style("opacity", function(o){
-                                     return d.index==o.source.index | d.index==o.target.index? 1:0.1;
-                                     });
-							toggle=1;
-				}else{
-				     var tooltipDiv=document.getElementById('tooltip');
-					      tooltipDiv.style.display="none";
-					node.style("opacity",0.9)
-						.attr("r",function(d){
-								 return d.size*13;
-							});
-                    link.style("opacity",1)
-                        .style("stroke","#999999")
-                        .style("stroke-width","2px");
-                     toggle=0;
-				}
+     if (toggle==0){
+			     var neighborNames=[];
+				 node.each(function(o){
+				     if (isConnected(d,o)){
+					     if (d.name!=o.name){
+					         neighborNames.push(o.name);
+					         }
+						 }
+					});
+				 var neighborNamesList=neighborNames.join("<br />");
+				 var tooltipDiv = document.getElementById('tooltip');
+				     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
+					 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connections: "+"</strong>"+"<br />"+neighborNamesList;
+				     tooltipDiv.style.display = "block";
+				     d=d3.select(this).node().__data__;
+                     node.transition()
+					     .style("opacity",function(o){
+                             return neighboring(d,o)|neighboring(o,d)? 0.9:0.1;
+                            });
+                     link.transition()
+						 .style("stroke",function(o){
+						         return d.index==o.source.index | d.index==o.target.index? "#F50F0F":"#999999";
+								 })
+					     .style("opacity", function(o){
+                             return d.index==o.source.index | d.index==o.target.index? 1:0.1;
+                             });
+					toggle=1;
+		}else{
+		     var tooltipDiv=document.getElementById('tooltip');
+			      tooltipDiv.style.display="none";
+			node.style("opacity",0.9)
+				.attr("r",function(d){
+						 return d.size*13;
+					});
+            link.style("opacity",1)
+                .style("stroke","#999999")
+                .style("stroke-width","2px");
+             toggle=0;
+		}
 	}
 		
  // There should be a way to optimize function crossOwnership. 
@@ -821,7 +704,8 @@ function crossOwnership(){
 		}
 }
 
-
+// Show the effect of CDO when the CDO fails
+// Note: this function needs to be optimized.
 function effectOfCdO(){
          var  d=dataset.nodes[parseInt(cdo.value,10)];
 		 var  thresh=parseInt(document.getElementById("range").innerHTML,10);
@@ -1192,6 +1076,184 @@ function reset(){
     document.getElementById('redraw').value="CDOs are connected";
     document.getElementById('path').value="";
 }
+
+/*
+function shortestPath(){
+    var starting=dataset.nodes[parseInt(bank1.value,10)];
+    var ending=dataset.nodes[parseInt(bank2.value,10)];
+    var directNeighbors=[];
+    var containEnding=1;
+
+    // Find direct neighbors
+    node.each(function(d){
+        if(isConnected(d,starting)&&d!=starting&&d.size>1){
+            directNeighbors.push(d);
+        }
+    });
+
+    
+    // Initialize all the arrays which will be used to store all the possible pathways
+
+    var nodePath=[];
+    for(var i=0; i<directNeighbors.length; i++){
+        nodePath[i]= new Array();
+        nodePath[i].push(directNeighbors[i]);
+    }
+    
+
+    // Start to search for the ending point
+    while(containEnding==1){
+        for(var i=0; i<nodePath.length; i++){
+            var storing=[];
+            if (nodePath[i][(nodePath[i].length-1)].size>1){
+                    node.each(function(d){
+                        if (isConnected(nodePath[i][(nodePath[i].length-1)],d)&&(!nodePath[i].includes(d))&&d!=starting){
+                            storing.push(d);
+                        }
+                    });
+                    nodePath[i].push(storing[0]);
+                }
+        }
+         
+        var temp=[];
+        for (var j=0; j<nodePath.length; j++){
+            if (nodePath[j].includes(ending)){
+                temp.push(0)
+            }
+        }
+
+        if (temp.includes(0)){
+            containEnding=0;
+        }
+    }
+    
+
+    var nodeInPath=[];
+    var comparing=nodePath[0].length;
+    var pathIndex=0;
+
+
+    for(var i=0; i<nodePath.length; i++){
+      if (nodePath[i].includes(ending)){
+        if ((nodePath[i].length-1)<comparing){
+            comparing=nodePath[i].length;
+            pathIndex++;
+        }
+      }else{
+            if (nodePath[i].length<comparing){
+            comparing=nodePath[i].length;
+            pathIndex++;
+        }
+      }
+    }
+    
+
+    for (i=0;i<nodePath[pathIndex].length; i++){
+        nodeInPath.push(nodePath[pathIndex][i]);
+    }
+
+
+    if (!nodeInPath.includes(starting)){
+        nodeInPath.push(starting);
+    }
+
+     if (!nodeInPath.includes(ending)){
+        nodeInPath.push(ending);
+    }
+    
+
+
+    node.style("opacity",function(o){
+        return nodeInPath.includes(o)? 0.9:0.1;
+    });
+    link.style("stroke", function(o){
+        return (nodeInPath.includes(o.source)&(nodeInPath.includes(o.target)))? "#F50F0F":"#999999";
+    })
+        .style("opacity", function(o){
+        return (nodeInPath.includes(o.source)&(nodeInPath.includes(o.target)))? 0.9:0.1;
+    });
+        
+    if (starting==undefined|ending==undefined){
+        document.getElementById('path').value=" ";
+        node.style("opacity",0.9);
+        link.style("stroke","#999999")
+            .style("opacity",0.9);
+    }else
+        {document.getElementById('path').value=(nodeInPath.length-2);}
+}
+
+
+function calculateDistance(){
+    var nodePath=[];
+    var nodePath2=[];
+    var d=dataset.nodes[parseInt(bank1.value,10)];
+    var dd=dataset.nodes[parseInt(bank2.value,10)];
+    var continuing=1;
+    var continuing2=1;
+    // from d to dd
+        node.each(function(o){
+            if (isConnected(d,o)){
+                if (o.size>1){
+                    nodePath.push(o);
+                }
+            }
+        });
+
+        while(continuing==1){
+            var addedNode=[];
+            if (nodePath.length>0){
+                node.each(function(o) {
+                    nodePath.forEach(function(e){
+                        if (isConnected(o,e)&(!nodePath.includes(o))&o.name!=d.name&o.size>1){
+                            addedNode.push(o);
+                        }
+                    })
+                });
+            }
+            nodePath=nodePath.concat(addedNode);
+            if (nodePath.includes(dd)){
+                continuing=0;
+            }
+        }
+
+
+
+             var remainingNode=[];
+            for (var i=0; i<nodePath.length; i++){
+                var countConnection=0;
+                for (var j=0; j<nodePath.length; j++){
+                    if ((nodePath[i]!=nodePath[j])&isConnected(nodePath[i],nodePath[j])){
+                        countConnection++;
+                    }
+                }
+                if ((countConnection>1)){
+                        remainingNode.push(nodePath[i]);
+                    }
+            }
+
+
+            if (!remainingNode.includes(d)){
+                remainingNode.push(d);
+            }
+
+            if (!remainingNode.includes(dd)){
+                remainingNode.push(dd);
+            }
+           
+        
+            
+            node.style("opacity",function(o){
+                return remainingNode.includes(o)? 0.9:0.1;
+            });
+            link.style("stroke", function(o){
+                        return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? "#F50F0F":"#999999";
+                    })
+                .style("opacity", function(o){
+                    return (remainingNode.includes(o.source)&(remainingNode.includes(o.target)))? 0.9:0.1;
+                });
+
+}
+*/
 
             </script>
     </body>
