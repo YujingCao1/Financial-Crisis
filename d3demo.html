@@ -25,7 +25,7 @@ Interactive Network of Bank and CDO
 <div id="introduction">
 <p>This is an interactive network which shows the relationship between bank and CDO. Please feel free to play around. <em>Enjoy!</em><br /><br />
 The failure of a CDO may affect the banks which own the corresponding CDO.
-Dynamic relationships between CDOs and banks can be shown by setting different thresholds for CDOs.<br /><br />
+Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs.<br /><br />
 Use "Threshold" slider bar to define the percentage of a bank's CDO fails.<br />
 If X percent of a bank's CDO fails, the bank will fail.
 </p>
@@ -54,7 +54,7 @@ If X percent of a bank's CDO fails, the bank will fail.
          <p>Due to cross-ownership of CDO's, banks are connected to each other.<br />
          Some of these connections are more direct, and some are more indirect.</p>
          <dd>
-             <li>For each bank X, how many other banks is ti related to (in sum)?
+             <li>For each bank X, how many other banks is it related to (in sum)?
              <li>For each bank X, within 3 CDO links, how many other banks is it related to?<br />
              <li>For each bank X, within 1 CDO link, how many other banks is it related to?<br />
          </dd>
@@ -344,6 +344,7 @@ var bank=document.getElementById("bank");
 
 var bank1=document.getElementById("bankList1");
 var bank2=document.getElementById("bankList2");
+var redraw=document.getElementById("redraw");
 
 var adding=0;
 function addEdges(){
@@ -712,6 +713,7 @@ function effectOfCdO(){
 	     var  cuttingNumber=threshold(thresh);
 		 var  cdoNeighborIndex=[];
 		 var  cdoNeighborPartial=[];
+         var cdoNeighborPartial1=[];
          var  directNodes2=[]; // this array will store all the direct nodes which fails in the second wave
 		 var  waveContinueing=1;
 		 var  secondWave=1;
@@ -725,10 +727,12 @@ function effectOfCdO(){
         	}
         });
         
-       // the neighbors which fail directoy after d fails
-		node.each(function(o){
-			if (isConnected(d,o)&&(100/o.size>cuttingNumber)){
+       // the neighbors which fail directly after d fails
+
+		cdoNeighborIndex.forEach(function(o){
+			if (isConnected(d,o) && ((100/o.size)>cuttingNumber)){
 				cdoNeighborPartial.push(o);
+                cdoNeighborPartial1.push(o);
 			}
 		});
          
@@ -773,7 +777,7 @@ function effectOfCdO(){
             			}
             		}
             	}
-
+ 
          var undirectNodes1=[]; // undirectNodes which will fail
 
         // Find undirect neighbors which will fail
@@ -798,10 +802,10 @@ function effectOfCdO(){
 			if (newNode.length>0){
 			    for (i=0;i<newNode.length;i++){
 			    	nodeLeft.push(newNode[i]);
-                    undirectNodes1.push(newNode[i]);
 			    	}
+                undirectNodes1.push(newNode);
 			    }
-
+         
            	if ((newNode.every(elem => elem.size <= 1))){
             		waveContinueing=0;
             	}else{
@@ -809,7 +813,7 @@ function effectOfCdO(){
             	}
 			}
 
-  
+
        // Find the nodes which fail because its neighbors fail.   
        var undirectNodes2=[]; 
        var undirectNodes3=[];
@@ -844,43 +848,50 @@ function effectOfCdO(){
         			}	
 
                 }
-    }    
-		
+    }
+        
         nodeLeft.push(d);
+        cdoNeighborPartial1.push(d);
 
         // Fade out the failing nodes and its edges.
 			      	node.transition()
 				         .delay(100)
 				         .duration(3000)
 						 .style("opacity",function(o){
-						      return cdoNeighborPartial.includes(o)? 0.1:0.9;
+						      return cdoNeighborPartial1.includes(o)? 0.1:0.9;
 							});	
                      node.transition()
-                        .delay(2100)
+                        .delay(100)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return directNodes2.includes(o)|cdoNeighborPartial.includes(o)? 0.1:0.9;
+                            return directNodes2.includes(o)|cdoNeighborPartial1.includes(o)? 0.1:0.9;
                         });
 
+                for (var dd=0;dd<undirectNodes1.length;dd++){
                     node.transition()
-                        .delay(4100)
+                        .delay(4100+dd*2000)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return undirectNodes1.includes(o)|cdoNeighborPartial.includes(o)|directNodes2.includes(o)? 0.1:0.9;
+                            return undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)? 0.1:0.9;
                         });
+                }
 
+
+                for (var dd=0;dd<undirectNodes2.length;dd++){
                     node.transition()
-                        .delay(6100)
+                        .delay(4100+dd*2000)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return undirectNodes2.includes(o)|undirectNodes1.includes(o)|cdoNeighborPartial.includes(o)|directNodes2.includes(o)? 0.1:0.9;
-                        });
+                            return undirectNodes2.slice(0,dd+1).some(elem =>elem==o)|undirectNodes1.some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)? 0.1:0.9;
+                        }); 
+                }
+
 
                     node.transition()
                         .delay(8100)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return undirectNodes2.includes(o)|undirectNodes1.includes(o)|cdoNeighborPartial.includes(o)|directNodes2.includes(o)|undirectNodes3.includes(o)? 0.1:0.9;
+                            return undirectNodes2.some(elem =>elem==o)|undirectNodes1.some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)|undirectNodes3.includes(o)? 0.1:0.9;
                         });
 
 
@@ -888,34 +899,40 @@ function effectOfCdO(){
                         .delay(100)
                         .duration(3000)
                         .style("opacity",function(o){
-						      return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])?0.1:1;
+						      return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])?0.1:1;
 							});	
 
                      link.transition()
                         .delay(2100)
                         .duration(3000)
                         .style("opacity",function(o){
-                              return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])?0.1:1;
+                              return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])?0.1:1;
                             }); 
 
+                for (var dd=0; dd<undirectNodes1.length; dd++){
                     link.transition()
-                        .delay(4100)
+                        .delay(4100+dd*2000)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])|undirectNodes1.includes(dataset.nodes[o.source.index])|undirectNodes1.includes(dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])? 0.1:1;
+                            return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(dataset.nodes[o.source.index]))|undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(dataset.nodes[o.target.index]))|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])? 0.1:1;
                         });
+                }
+
+                for (var dd=0;dd<undirectNodes2.length;dd++){
                     link.transition()
-                        .delay(6100)
+                        .delay(6100+dd*2000)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])|undirectNodes1.includes(dataset.nodes[o.source.index])|undirectNodes1.includes(dataset.nodes[o.target.index])|undirectNodes2.includes(dataset.nodes[o.source.index])|undirectNodes2.includes(dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])? 0.1:1;
-                        });
+                            return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.target.index]))|undirectNodes2.slice(0,dd+1).some(elem =>elem==dataset.nodes[o.source.index])|undirectNodes2.slice(0,dd+1).some(elem =>elem==dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])? 0.1:1;
+                        }); 
+                }
+
 
                     link.transition()
                         .delay(8100)
                         .duration(3000)
                         .style("opacity",function(o){
-                            return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])|undirectNodes1.includes(dataset.nodes[o.source.index])|undirectNodes1.includes(dataset.nodes[o.target.index])|undirectNodes2.includes(dataset.nodes[o.source.index])|undirectNodes2.includes(dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])|undirectNodes3.includes(dataset.nodes[o.source.index])|undirectNodes3.includes(dataset.nodes[o.target.index])? 0.1:1;
+                            return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.target.index]))|undirectNodes2.some(elem =>elem==dataset.nodes[o.source.index])|undirectNodes2.some(elem =>elem==dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])|undirectNodes3.includes(dataset.nodes[o.source.index])|undirectNodes3.includes(dataset.nodes[o.target.index])? 0.1:1;
                         });
 
     }
@@ -954,8 +971,7 @@ function reset(){
           .attr("viewBox", "0 0 " + width + " " + height)
           .attr("perserveAspectRatio", "xMinYMid")
           .on('dblclick',reset);
-		  
-		  
+
  	link=svg.selectAll(".link")
             .data(dataset.link)
             .enter()
@@ -1054,6 +1070,8 @@ function reset(){
 
 	bank1=document.getElementById("bankList1");
 	bank2=document.getElementById("bankList2");
+    redraw=document.getElementById("redraw");
+
     
     if (bank1.length==bank2.length){
     	for (var i=0;i<bank1.length;i++){
@@ -1070,12 +1088,15 @@ function reset(){
 		}
 	}
 	
+
 	// go back to default
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('redraw').value="CDOs are connected";
     document.getElementById('path').value="";
+
 }
+
 
 /*
 function shortestPath(){
