@@ -37,7 +37,7 @@ If X percent of a bank's CDO fails, the bank will fail.
      <h3>Threshold<br /></h3>
      </div>
      <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
-     <span id="range">0</span><br><br>
+     <span id="range">0 %</span><br><br>
 	<label>Which CDO will fail: <br /><br /></label>
      <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
 	 	<option selected value=-1>Select a CDO</option>
@@ -76,7 +76,7 @@ If X percent of a bank's CDO fails, the bank will fail.
 
 <div id="distance">
 	<p>What is the shortest path between the selected banks?<br /></p>
-	<div style="display:inline-block; vertical-align:center;">Shortest path between </div>
+	<div style="display:inline-block; vertical-align:center;">The shortest path between </div>
 	<select id="bankList1" onchange="deactiveOption();shortestPath();">
 		<option selected value=-1> Select a Bank</option>
 		<option value=0>Bank A</option>
@@ -358,14 +358,14 @@ function addEdges(){
          source: 4, 
          target: 7
          });
-    reset();
-    adding=1;
-    document.getElementById("redraw").value="CDOs are NOT connected";
+        reset();
+        adding=1;
+        document.getElementById("redraw").value="CDOs are NOT connected";
     }else{
         dataset.link.splice(dataset.link.length-2,2);
         reset();
         adding=0;
-    document.getElementById("redraw").value="CDO are connected";
+        document.getElementById("redraw").value="CDOs are connected";
     }
 }
 
@@ -1079,7 +1079,7 @@ function reset(){
 			bank2.options[i].disabled=false;
 		}
 	}else{
-			for (var i=0;i<bank1.length;i++){
+		for (var i=0;i<bank1.length;i++){
 			bank1.options[i].disabled=false;
 		}
 
