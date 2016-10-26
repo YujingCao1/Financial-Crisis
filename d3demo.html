@@ -25,41 +25,43 @@ Interactive Network of Bank and CDO
 </div>
 
 <div id="introduction">
-<p>This is an interactive network which shows the relationships among banks and CDOs. Please feel free to play around. <em>Enjoy!</em><br /><br />
-The failure of a CDO may affect the banks which own the corresponding CDO.
-Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs.<br /><br />
-Use "Threshold" slider bar to define the percentage of a bank's CDO fails.<br />
-If X percent of a bank's CDO fails, the bank will fail.
-</p>
-</div>
+    <p>This is an interactive network which shows the relationships among banks and CDOs. Please feel free to play around. <em>Enjoy!</em></p>
 
-
-<div id="dropdown">
-     <div id="Threshold">
-     <h3>Threshold<br /></h3>
-     </div>
-     <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
-     <span id="range">0 %</span><br><br>
-	<label>Which CDO will fail: <br /><br /></label>
-     <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
-	 	<option selected value=-1>Select a CDO</option>
-	 	<option value=4>CDO1</option>
-	 	<option value=5>CDO2</option>
-	 	<option value=6>CDO3</option>
-	 	<option value=7>CDO4</option>
-		<option value=8>CDO5</option>
-		<option value=9>CDO6</option>
-	 </select>
+    <div id="Part1">
+    <h3><strong>Part 1</strong></h3>
+    </div>
+    
+    <p>Use CDOs as the central node. Connected to each CDO is the bank that owns a piece.</p>
+    <li><span>For each bank X, how many CDOs does it own? Click a node to check its connected CDOs.</span></li>
+    <li><span>The failure of a CDO may affect the banks which own the corresponding CDO.
+    Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.</span></li><br>
+    If X percent of a bank's CDO fails, the bank will fail.</p>
+         <p><strong>Threshold</strong></p>
+         <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
+         <span id="range">0 %</span><br>
+    	<label>Which CDO will fail: <br><br></label>
+         <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
+    	 	<option selected value=-1>Select a CDO</option>
+    	 	<option value=4>CDO1</option>
+    	 	<option value=5>CDO2</option>
+    	 	<option value=6>CDO3</option>
+    	 	<option value=7>CDO4</option>
+    		<option value=8>CDO5</option>
+    		<option value=9>CDO6</option>
+    	 </select>
 </div> 
 
 <div id="options">
-         <p>Due to cross-ownership of CDO's, banks are connected to each other.<br />
-         Some of these connections are more direct, and some are more indirect.</p>
+         <li><span>Due to cross-ownership of CDO's, banks are connected to each other.<br />
+         Some of these connections are more direct, and some are more indirect.</span></li>
          <dd>
-             <li>For each bank X, how many other banks is it related to (in sum)?
-             <li>For each bank X, within 3 CDO links, how many other banks is it related to?<br />
-             <li>For each bank X, within 1 CDO link, how many other banks is it related to?<br />
+             <ol>
+                 <li><span>For each bank X, how many other banks is it related to (in sum)?</span></li>
+                 <li><span>For each bank X, within 3 CDO links, how many other banks is it related to?</span></li>
+                 <li><span>For each bank X, within 1 CDO link, how many other banks is it related to?</span></li>
+             </ol>
          </dd>
+
 		 <p>Choose the bank you would like to explore and the number of CDO links</p>
          <select id="bank" name="Bank_explore" onchange="crossOwnership();">
 		 	<option selected value=-1>Select a Bank</option>
@@ -76,8 +78,16 @@ If X percent of a bank's CDO fails, the bank will fail.
          </select>
 </div>
 
+
 <div id="distance">
-	<p>What is the shortest path between the selected banks?<br /></p>
+    <div id="Part2">
+    <h3><strong>Part 2</strong></h3>
+    </div>
+    <p>Now, introduce CDO cross-ownership. That is, allow CDOs to be broken up and repacked together
+    in a new investment(CDO). To explore this topic and answer the following questions, let's use button <strong>"CDOs are connected"</strong> to draw 
+    a new diagram for this topic. </p>
+    <li><span>Now, if CDO i fails, how many banks fails? Use <strong>"Threshold"</strong> slider from <strong>Part 1</strong> to define the percentage of originating CDOs fails and the percentage of a bank's CDOs fails.</span></li>
+	<li><span>What is the shortest path between the selected banks?</span></li>
 	<div style="display:inline-block; vertical-align:center;">The shortest path between </div>
 	<select id="bankList1" onchange="deactiveOption();shortestPath();">
 		<option selected value=-1> Select a Bank</option>
@@ -242,10 +252,9 @@ var svg=d3.select("div#container")
           .append("svg")
           .attr("width",width)
           .attr("height",height)
-          .append("g")
-          .attr("viewBox", "0 0 " + width + " " + height)
-          .attr("perserveAspectRatio", "xMinYMid")
-		  .on('dblclick',reset);
+          .attr('viewBox','0 0 '+width*1.2+' '+height*1.2)
+          .attr('perserveAspectRatio','xMidYMid meet')
+          .append("g");
 		  
 var link=svg.selectAll(".link")
             .data(dataset.link)
@@ -999,10 +1008,9 @@ function reset(){
           .append("svg")
           .attr("width",width)
           .attr("height",height)
-          .append("g")
-          .attr("viewBox", "0 0 " + width + " " + height)
-          .attr("perserveAspectRatio", "xMinYMid")
-          .on('dblclick',reset);
+          .attr('viewBox','0 0 '+width*1.2+' '+height*1.2)
+          .attr('perserveAspectRatio','xMidYMid meet')
+          .append("g");
 
  	link=svg.selectAll(".link")
             .data(dataset.link)
