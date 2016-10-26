@@ -731,6 +731,34 @@ function effectOfCdO(){
         });
         
        // the neighbors which fail directly after d fails
+    if (adding==0){
+
+        // Part 1: CDOs are not connected.
+
+        cdoNeighborIndex.forEach(function(o){
+            if (isConnected(d,o) && ((100/o.size)>cuttingNumber)){
+                cdoNeighborPartial.push(o);
+            }
+        });
+
+        if (!cdoNeighborPartial.includes(d)){
+            cdoNeighborPartial.push(d);
+        }
+
+        node.transition()
+            .delay(100)
+            .duration(3000)
+            .style('opacity',function(o){
+                return cdoNeighborPartial.includes(o)? 0.1:0.9;
+            });
+        link.transition()
+            .delay(100)
+            .duration(3000)
+            .style('opacity', function(o){
+                return cdoNeighborPartial.includes(dataset.nodes[o.source.index])|cdoNeighborPartial.includes(dataset.nodes[o.target.index])? 0.1:1;
+            })
+    }else{
+        // Part 2: CDOs are connected.
 
 		cdoNeighborIndex.forEach(function(o){
 			if (isConnected(d,o) && ((100/o.size)>cuttingNumber)){
@@ -937,6 +965,7 @@ function effectOfCdO(){
                         .style("opacity",function(o){
                             return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.target.index]))|undirectNodes2.some(elem =>elem==dataset.nodes[o.source.index])|undirectNodes2.some(elem =>elem==dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])|undirectNodes3.includes(dataset.nodes[o.source.index])|undirectNodes3.includes(dataset.nodes[o.target.index])? 0.1:1;
                         });
+            }
 
     }
 // This function looks up whether a pair are neighbors
