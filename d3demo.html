@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Serif+Pro" rel="stylesheet">
 </head>
 
-<body ondblclick="reset();">
+<body>
 <div id="header">
 <h2>
 Interactive Network of Bank and CDO
@@ -25,7 +25,7 @@ Interactive Network of Bank and CDO
 </div>
 
 <div id="introduction">
-<p>This is an interactive network which shows the relationship between bank and CDO. Please feel free to play around. <em>Enjoy!</em><br /><br />
+<p>This is an interactive network which shows the relationships among banks and CDOs. Please feel free to play around. <em>Enjoy!</em><br /><br />
 The failure of a CDO may affect the banks which own the corresponding CDO.
 Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs.<br /><br />
 Use "Threshold" slider bar to define the percentage of a bank's CDO fails.<br />
@@ -103,6 +103,7 @@ If X percent of a bank's CDO fails, the bank will fail.
 <div id="tooltip"></div>
 <div id="container"></div>
 <input type="button" name="newgraph" value="CDOs are connected" id="redraw" onclick="addEdges();" />
+<input type="button" name="reset" value="Default" id="reset" onclick="reset();" />
 
 <script type="text/javascript">
 
@@ -1096,6 +1097,7 @@ function reset(){
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('redraw').value="CDOs are connected";
     document.getElementById('path').value="";
+    document.getElementById('reset').value="Default";
 
 }
 
