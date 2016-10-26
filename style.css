@@ -69,9 +69,6 @@ input[type=range]:focus::-moz-range-track{
 	background:#ccc;
 }
 
-h2{
-	font-family: 'Montserrat', sans-serif;
-}
 .node {
     stroke: #fff;
 	opacity:0.9;
@@ -92,10 +89,25 @@ text {
 }
 
 
+h2{
+	font-family: 'Bree Serif', serif;
+	font-size: 25px;
+}
+
+h3{
+	margin-top:0;
+	margin-bottom: 0;
+}
+
+p{
+	margin-bottom: 8px;
+	margin-top:8px;
+}
+
 #container{
 	float:right;
-	top: 20%;
-	left: 40%;
+	top: 53%;
+	left: 43%;
 	position: absolute;
 }
 
@@ -111,29 +123,62 @@ text {
 	left: 0;
 }
 
-h2{
-	font-family: 'Bree Serif', serif;
-	font-size: 25px;
-}
-
-h3{
+#Part1{
+	text-align: center;
+	background: rgba(26, 139, 239, 0.6);
 	font-family: 'Bree Serif',serif;
 	font-size: 18px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+	margin-top: 9px;
+	margin-bottom:9px;
 }
+
+#Part2{
+	text-align: center;
+	background: rgba(26, 139, 239, 0.6);
+	font-family: 'Bree Serif',serif;
+	font-size: 18px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+	margin-bottom: 9px;
+}
+
 
 #introduction{
 	width: 40%;
+	left: 10%;
 	text-align: justify;
 }
-
-#dropdown{
-	width: 40%;
-	height: auto;
+#introduction>li{
+	list-style: none;
+	color: rgba(26, 139, 239, 1);
 }
+#introduction>li::before{
+	content: '✤';
+	font-size: 25px;
+	vertical-align: middle;
+	line-height: 20px;
+	margin-right: 10px;
+}
+
 
 #options{
 	width:40%;
 	height:auto;
+	margin-bottom: 10px;
+}
+
+#options>li{
+	list-style: none;
+	color: rgba(26, 139, 239, 1);
+}
+#options>li::before{
+	content: '✤';
+	font-size: 25px;
+	vertical-align: middle;
+	line-height: 20px;
+	margin-right: 10px;
 }
 
 #cdo{
@@ -159,6 +204,22 @@ h3{
 #distance{
 	width: 40%;
 	height: auto;
+	top: 13%;
+	left: 45%;
+	position: absolute;
+	float: left;
+}
+
+#distance>li{
+	list-style: none;
+	color: rgba(26, 139, 239, 1);
+}
+#distance>li::before{
+	content: '✤';
+	font-size: 25px;
+	vertical-align: middle;
+	line-height: 20px;
+	margin-right: 10px;
 }
 
 #bankList1{
@@ -208,7 +269,7 @@ h3{
 #redraw{
 	float: right;
 	position: absolute;
-	top: 18%;
+	top: 53%;
 	left: 60%;
 	text-align: center;
 	display: inline-block;
@@ -222,7 +283,7 @@ h3{
 #reset{
 	float: left;
 	position: absolute;
-	top: 18%;
+	top: 53%;
 	left: 45%;
 	text-align:center;
 	display: inline-block;
@@ -233,3 +294,13 @@ h3{
 	border-width: 3px;
 	width: 10%;
 }
+
+li span{
+	color: black;
+}
+
+ol{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
