@@ -37,7 +37,7 @@ Interactive Network of Bank and CDO
     Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.</span></li><br>
     If X percent of a bank's CDO fails, the bank will fail.</p>
          <p><strong>Threshold</strong></p>
-         <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value)" />
+         <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value);effectOfCdO();" />
          <span id="range">0 %</span><br>
     	<label>Which CDO will fail: <br><br></label>
          <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
@@ -76,6 +76,28 @@ Interactive Network of Bank and CDO
          	<option value=2>2</option> 
          	<option value=3>3</option>
          </select>
+    <div id="shortestWay">
+        <li><span>What is the shortest path between the selected banks?</span></li>
+        <div style="display:inline-block; vertical-align:center;">The shortest path between </div>
+        <select id="bankList1" onchange="deactiveOption();shortestPath();">
+            <option selected value=-1> Select a Bank</option>
+            <option value=0>Bank A</option>
+            <option value=1>Bank B</option>
+            <option value=2>Bank C</option> 
+            <option value=3>Bank D</option>
+        </select>
+        <div style="display:inline-block; vertical-align:center;"> and</div>
+        <select id="bankList2" onchange="deactiveOption();shortestPath();">
+             <option selected value=-1>Select a Bank</option>
+             <option value=0>Bank A</option>
+             <option value=1>Bank B</option>
+             <option value=2>Bank C</option> 
+             <option value=3>Bank D</option>
+             </select>
+        <div style="display: inline-block; vertical-align: center;"> contains</div>
+        <input type="text" name="shortestDistance" value=" " id="path" />
+        <div style="display: inline-block; vertical-align: center;"> CDOs and banks</div>
+    </div>      
 </div>
 
 
@@ -87,26 +109,6 @@ Interactive Network of Bank and CDO
     in a new investment(CDO). To explore this topic and answer the following questions, let's use button <strong>"CDOs are connected"</strong> to draw 
     a new diagram for this topic. </p>
     <li><span>Now, if CDO i fails, how many banks fails? Use <strong>"Threshold"</strong> slider from <strong>Part 1</strong> to define the percentage of originating CDOs fails and the percentage of a bank's CDOs fails.</span></li>
-	<li><span>What is the shortest path between the selected banks?</span></li>
-	<div style="display:inline-block; vertical-align:center;">The shortest path between </div>
-	<select id="bankList1" onchange="deactiveOption();shortestPath();">
-		<option selected value=-1> Select a Bank</option>
-		<option value=0>Bank A</option>
-    	<option value=1>Bank B</option>
-    	<option value=2>Bank C</option> 
-    	<option value=3>Bank D</option>
-	</select>
-	<div style="display:inline-block; vertical-align:center;"> and</div>
-	<select id="bankList2" onchange="deactiveOption();shortestPath();">
-		 <option selected value=-1>Select a Bank</option>
-         <option value=0>Bank A</option>
-         <option value=1>Bank B</option>
-         <option value=2>Bank C</option> 
-         <option value=3>Bank D</option>
-         </select>
-    <div style="display: inline-block; vertical-align: center;"> contains</div>
-    <input type="text" name="shortestDistance" value=" " id="path" />
-    <div style="display: inline-block; vertical-align: center;"> CDOs and banks</div>
 
 </div>
 
@@ -615,7 +617,6 @@ function crossOwnership(){
 			     }
 
 
-
                  node.transition()
 				     .delay(100)
 					 .duration(1000)
@@ -697,23 +698,42 @@ function crossOwnership(){
 			 if(connected5.length!=0&&(!connected5.includes(d))){
 			 	connected5.push(d);
 			 }
-			
+
 			// 6th order neighbors and 3 CDO links
-			  node.transition()
-				     .delay(100)
-					 .duration(1000)
-				     .style("opacity",function(o){
-                             return connected5.includes(o)? 0.9:0.1;
-                             });
-					 
-	             link.style("opacity",function(o){
-                      return connected5.includes(o.source)&&connected5.includes(o.target)? 0.9:0.1;
-                      })
-                     .style("stroke",function(o){
-                         return connected5.includes(o.source)&&connected5.includes(o.target)? "red":"#999999";
-                     })
-                     .style("stroke-width","2px");
-			}
+                if (connected5.length!=0){
+                     node.transition()
+                         .delay(100)
+                         .duration(1000)
+                         .style("opacity",function(o){
+                                 return connected5.includes(o)? 0.9:0.1;
+                                 });
+                         
+                     link.style("opacity",function(o){
+                          return connected5.includes(o.source)&&connected5.includes(o.target)? 0.9:0.1;
+                          })
+                         .style("stroke",function(o){
+                             return connected5.includes(o.source)&&connected5.includes(o.target)? "red":"#999999";
+                         })
+                         .style("stroke-width","2px");
+                }else{
+                    var combined=connected1.concat(connected2,connected3,d);
+
+                    node.transition()
+                         .delay(100)
+                         .duration(1000)
+                         .style("opacity",function(o){
+                                 return combined.includes(o)? 0.9:0.1;
+                                 });
+                         
+                     link.style("opacity",function(o){
+                          return combined.includes(o.source)&&combined.includes(o.target)? 0.9:0.1;
+                          })
+                         .style("stroke",function(o){
+                             return combined.includes(o.source)&&combined.includes(o.target)? "red":"#999999";
+                         })
+                         .style("stroke-width","2px");
+                }
+            }
 		}
 }
 
@@ -725,7 +745,7 @@ function effectOfCdO(){
 	     var  cuttingNumber=threshold(thresh);
 		 var  cdoNeighborIndex=[];
 		 var  cdoNeighborPartial=[];
-         var cdoNeighborPartial1=[];
+         var  cdoNeighborPartial1=[];
          var  directNodes2=[]; // this array will store all the direct nodes which fails in the second wave
 		 var  waveContinueing=1;
 		 var  secondWave=1;
