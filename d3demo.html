@@ -794,6 +794,9 @@ function effectOfCdO(){
         if (!cdoNeighborPartial.includes(d)){
             cdoNeighborPartial.push(d);
         }
+        if (!cdoNeighborPartial1.includes(d)){
+            cdoNeighborPartial1.push(d);
+        }
 		// Check if other direct neighbors will fail
 
         if (d.size==1&&cdoNeighborIndex.splice(d,1).every(elem => elem.size>100/cuttingNumber)){
