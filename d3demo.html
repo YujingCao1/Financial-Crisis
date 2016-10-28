@@ -276,12 +276,8 @@ var node=svg.selectAll(".node")
 	                 return d.size*13;
 	                 })
          .style("fill", function (d) {
-                 if (d.group==1){
-	                 return "rgba(63, 127, 191, 0.9)";
-	                 } else{
-	                        return "rgba(255, 229, 0, 0.9)";
-	                     }
-                    });
+	           return d.group==1?"rgba(63, 127, 191, 0.9)":"rgba(255, 229, 0, 0.9)";
+            });
 	node.append("text")
 	    .attr("dx",-15)
 		.text(function(d){
@@ -320,8 +316,7 @@ var legend = svg.selectAll('.legend')
 	legend.append("text")
       	.attr('x', 70).attr('y', 19)
       	.text(function(d) { return d.name; })
-      	.attr("stroke","black")
-	  	.style("font-size","14px");
+      	.attr("stroke","black");
 
 	force.on("tick",function(){
 	link.attr("x1",function(d){
