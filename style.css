@@ -183,9 +183,14 @@ p{
 	line-height: 1.5;
 }
 
+#viz{
+	position: relative;
+}
 #container{
+	top: 55%;
 	left: 50%;
 	position: absolute;
+	transform: translate(1%,-2%);
 }
 
 #header{
@@ -391,6 +396,7 @@ p{
 }
 
 #redraw{
+	top:53%;
 	left: 70%;
 	position: absolute;
 	text-align: center;
@@ -403,6 +409,7 @@ p{
 	font-family: 'Source Code Pro', monospace;
 }
 #reset{
+	top: 53%;
 	left: 55%;
 	position: absolute;
 	text-align:center;

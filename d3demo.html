@@ -32,6 +32,11 @@ Interactive Network of Bank and CDO
     <p>We'll use the visualization to consider several different impacts of the housing crisis (and the failure of CDOs) on the banking sector. In this first section, you will be able to consider hwo the failure of a CDO may affect the solvency of a bank. A bank is solvent if it has enough assets. In this simplified model, suppose that the only assets of a bank are the CDOs that it owns.</p>
 
 </div>
+<div id="viz">
+    <div id="container"></div>
+    <input type="button" name="newgraph" value="CDOs are connected" id="redraw" onclick="addEdges();" />
+    <input type="button" name="reset" value="Default" id="reset" onclick="reset();" />
+</div>
 <div id="introduction">
     <div id="Part1">
     <h3><strong>Part 1</strong></h3>
@@ -116,9 +121,6 @@ Interactive Network of Bank and CDO
 </div>
 
 <div id="tooltip"></div>
-<div id="container"></div>
-<input type="button" name="newgraph" value="CDOs are connected" id="redraw" onclick="addEdges();" />
-<input type="button" name="reset" value="Default" id="reset" onclick="reset();" />
 
 <script type="text/javascript">
 
