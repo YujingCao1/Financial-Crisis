@@ -32,11 +32,13 @@ Interactive Network of Bank and CDO
     <p>We'll use the visualization to consider several different impacts of the housing crisis (and the failure of CDOs) on the banking sector. In this first section, you will be able to consider hwo the failure of a CDO may affect the solvency of a bank. A bank is solvent if it has enough assets. In this simplified model, suppose that the only assets of a bank are the CDOs that it owns.</p>
 
 </div>
+
 <div id="viz">
     <div id="container"></div>
     <input type="button" name="newgraph" value="CDOs are connected" id="redraw" onclick="addEdges();" />
-    <input type="button" name="reset" value="Default" id="reset" onclick="reset();" />
+    <input type="button" name="reset" value="Default" id="reset" onclick="reset();initalSet();" />
 </div>
+
 <div id="introduction">
     <div id="Part1">
     <h3><strong>Part 1</strong></h3>
@@ -160,7 +162,7 @@ var dataset={
          },
         {
          name:"CDO 1",
-         size: 2,
+         size: 1,
          group:2,
 		 x:600,
 		 y:260,
@@ -168,7 +170,7 @@ var dataset={
          },
         {
          name:"CDO 2",
-         size:3,
+         size:2,
          group:2,
 		 x:500,
 		 y:380,
@@ -176,7 +178,7 @@ var dataset={
          },
         {
          name:"CDO 3",
-         size: 2,
+         size: 1,
          group:2,
 		 x:250,
 		 y:430,
@@ -184,7 +186,7 @@ var dataset={
          },
         {
          name:"CDO 4",
-         size:3,
+         size:2,
          group:2,
 		 x:900,
 		 y:430,
@@ -373,6 +375,10 @@ function addEdges(){
          source: 4, 
          target: 7
          });
+        dataset.nodes[4].size=2;
+        dataset.nodes[6].size=2;
+        dataset.nodes[7].size=3;
+        dataset.nodes[5].size=3;
         reset();
         adding=1;
         document.getElementById("redraw").value="CDOs are NOT connected";
@@ -393,6 +399,30 @@ function addEdges(){
         document.getElementById("question3").style.display="block";
         document.getElementById("bank_cdo").style.display="block";
         document.getElementById("paragraph2").style.display="block";
+        dataset.nodes[4].size=1;
+        dataset.nodes[6].size=1;
+        dataset.nodes[7].size=2;
+        dataset.nodes[5].size=2;
+    }
+}
+
+var initSet=0;
+function initalSet(){
+    if (adding==1){
+        dataset.link.splice(dataset.link.length-2,2);
+        reset();
+        adding=0;
+        document.getElementById("redraw").value="CDOs are connected";
+        document.getElementById("Part1").innerHTML="Part 1";
+        document.getElementById("question1").style.display="block";
+        document.getElementById("question2").innerHTML=original;
+        document.getElementById("question3").style.display="block";
+        document.getElementById("bank_cdo").style.display="block";
+        document.getElementById("paragraph2").style.display="block";
+        dataset.nodes[4].size=1;
+        dataset.nodes[6].size=1;
+        dataset.nodes[7].size=2;
+        dataset.nodes[5].size=2;
     }
 }
 
@@ -660,7 +690,7 @@ function crossOwnership(){
 	         // direct neighbors
 	        var connected=[];
                 node.each(function(o){
-                     if (isConnected(d,o)&&o.group==2){
+                     if (isConnected(d,o)&&o.group==2&&o.size>1){
                           connected.push(o);
                          }
                      });
@@ -680,7 +710,7 @@ function crossOwnership(){
 			var connected2=[];
 			     node.each(function(o){
 			     	connected1.forEach(function(e){
-			         	if (isConnected(e,o)&&o.group==2&&e.group==1&&(!connected1.includes(o))){
+			         	if (isConnected(e,o)&&o.group==2&&e.group==1&&(!connected1.includes(o))&&o.size>1){
 				         	connected2.push(o);
 				         	connected2.push(e);
 					     }
@@ -691,7 +721,7 @@ function crossOwnership(){
 			 var connected3=[];
 			     node.each(function(o){
 			     	connected2.forEach(function(e){
-			     		if(isConnected(o,e)&&e.group==2&&o.group==1&&(!connected2.includes(o))){
+			     		if(isConnected(o,e)&&e.group==2&&o.group==1&&(!connected2.includes(o))&&o.size>1){
 			     			connected3.push(o);
 			     			connected3.push(e);
 			     		}
@@ -777,6 +807,7 @@ function effectOfCdO(){
 		 var  nodeLeft=[];
 	 
 	 // all the neighbors of node d
+    if (d!=undefined){
         node.each(function(o){
         	if (isConnected(d,o)){
         		cdoNeighborIndex.push(o);
@@ -1022,8 +1053,8 @@ function effectOfCdO(){
                             return cdoNeighborPartial1.includes(dataset.nodes[o.source.index])|cdoNeighborPartial1.includes(dataset.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(dataset.nodes[o.target.index]))|undirectNodes2.some(elem =>elem==dataset.nodes[o.source.index])|undirectNodes2.some(elem =>elem==dataset.nodes[o.target.index])|directNodes2.includes(dataset.nodes[o.source.index])|directNodes2.includes(dataset.nodes[o.target.index])|undirectNodes3.includes(dataset.nodes[o.source.index])|undirectNodes3.includes(dataset.nodes[o.target.index])? 0.1:1;
                         });
             }
-
     }
+}
 // This function looks up whether a pair are neighbors
 function neighboring(a,b){
         return linkedByIndex[a.index+","+b.index];  // Use console.log to check the structure and name
