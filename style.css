@@ -177,8 +177,6 @@ input{
 }
 
 #container{
-	float:right;
-	top: 53%;
 	left: 50%;
 	position: absolute;
 }
@@ -214,6 +212,10 @@ input{
 	margin-bottom: 9px;
 }
 
+#background{
+	width: 100%;
+	height: auto;
+}
 
 #introduction{
 	width: 45%;
@@ -304,6 +306,7 @@ input{
 	left: 50%;
 	position: absolute;
 	float: left;
+	display: none;
 }
 
 #distance>li{
@@ -371,7 +374,7 @@ input{
 }
 
 #redraw{
-	float: right;
+	left: 70%;
 	position: absolute;
 	text-align: center;
 	display: inline-block;
@@ -383,7 +386,7 @@ input{
 	font-family: 'Source Code Pro', monospace;
 }
 #reset{
-	float: left;
+	left: 55%;
 	position: absolute;
 	text-align:center;
 	display: inline-block;

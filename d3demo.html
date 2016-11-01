@@ -24,58 +24,68 @@ Interactive Network of Bank and CDO
 </h2>
 </div>
 
-<div id="introduction">
-    <p>This is an interactive network which shows the relationships among banks and CDOs. Please feel free to play around. <em>Enjoy!</em></p>
+<div id="background">
+    <p>In the attached visualization, I have mocked up some hypothetical relationships to banks and CDOs to explore the impact of failing CDPs on the finanical sector. The visualization has the following properties:</p>
+    <ul>
+        <li>Each bank is noted by a blue circle; each CDP is noted by a yellow circle.</li>
+        <li>Banks can own a CDO or multiple CDOs. The ownership of a CDO by a bank is denoted by a gray link between the two circles or nodes</li>
+        <li>A given CDO can have multiple owners. That is, two banks can own a single CDO; 50% of a CDO is owned by each bank.</li>
+    </ul>
+    <p>We'll use the visualization to consider several different impacts of the housing crisis (and the failure of CDOs) on the banking sector. In this first section, you will be able to consider hwo the failure of a CDO may affect the solvency of a bank. A bank is solvent if it has enough assets. In this simplified model, suppose that the only assets of a bank are the CDOs that it owns.</p>
 
+</div>
+<div id="introduction">
     <div id="Part1">
     <h3><strong>Part 1</strong></h3>
     </div>
     
-    <p>Use CDOs as the central node. Connected to each CDO is the bank that owns a piece.</p>
-    <li><span>For each bank X, how many CDOs does it own? Click a node to check its connected CDOs.</span></li>
-    <li><span>The failure of a CDO may affect the banks which own the corresponding CDO.
+    <p id="paragraph1">Use CDOs as the central node. Connected to each CDO is the bank that owns a piece.</p>
+    <li id="question1"><span>For each bank X, how many CDOs does it own? Click a node to check its connected CDOs.</span></li>
+    <li id="question2"><span>The failure of a CDO may affect the banks which own the corresponding CDO.
     Dynamic relationships among CDOs and banks can be shown by setting different thresholds for CDOs. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.</span></li><br>
     If X percent of a bank's CDO fails, the bank will fail.</p>
          <p><strong>Threshold</strong></p>
          <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value);effectOfCdO();" />
          <span id="range">0 %</span><br>
-    	<label>Which CDO will fail: <br><br></label>
+        <label>Which CDO will fail: <br><br></label>
          <select id="cdo" name="CDO_name" onChange="effectOfCdO()">
-    	 	<option selected value=-1>Select a CDO</option>
-    	 	<option value=4>CDO1</option>
-    	 	<option value=5>CDO2</option>
-    	 	<option value=6>CDO3</option>
-    	 	<option value=7>CDO4</option>
-    		<option value=8>CDO5</option>
-    		<option value=9>CDO6</option>
-    	 </select>
+            <option selected value=-1>Select a CDO</option>
+            <option value=4>CDO1</option>
+            <option value=5>CDO2</option>
+            <option value=6>CDO3</option>
+            <option value=7>CDO4</option>
+            <option value=8>CDO5</option>
+            <option value=9>CDO6</option>
+         </select>
 </div> 
 
 <div id="options">
-         <li><span>Due to cross-ownership of CDO's, banks are connected to each other.<br />
+         <li id="question3"><span>Due to cross-ownership of CDO's, banks are connected to each other.<br />
          Some of these connections are more direct, and some are more indirect.</span></li>
          <dd>
-             <ol>
-                 <li><span>For each bank X, how many other banks is it related to (in sum)?</span></li>
-                 <li><span>For each bank X, within 3 CDO links, how many other banks is it related to?</span></li>
-                 <li><span>For each bank X, within 1 CDO link, how many other banks is it related to?</span></li>
+             <ol id="orderlist">
+                 <li id="question4a"><span>For each bank X, how many other banks is it related to (in sum)?</span></li>
+                 <li id="question4b"><span>For each bank X, within 3 CDO links, how many other banks is it related to?</span></li>
+                 <li id="question4c"><span>For each bank X, within 1 CDO link, how many other banks is it related to?</span></li>
              </ol>
          </dd>
 
-		 <p>Choose the bank you would like to explore and the number of CDO links</p>
-         <select id="bank" name="Bank_explore" onchange="crossOwnership();">
-		 	<option selected value=-1>Select a Bank</option>
-         	<option value=0>Bank A</option>
-         	<option value=1>Bank B</option>
-         	<option value=2>Bank C</option> 
-         	<option value=3>Bank D</option>
+         <p id="p1">Choose the bank you would like to explore and the number of CDO links</p>
+         <div id="bank_cdo">
+            <select id="bank" name="Bank_explore" onchange="crossOwnership();">
+            <option selected value=-1>Select a Bank</option>
+            <option value=0>Bank A</option>
+            <option value=1>Bank B</option>
+            <option value=2>Bank C</option> 
+            <option value=3>Bank D</option>
          </select>
          <select id="cdoOwnership" name="CDO_Ownership" onchange="crossOwnership();">
-			 <option selected value=-1>Select The Number of CDO Links</option>
-         	<option value=1>1</option>
-         	<option value=2>2</option> 
-         	<option value=3>3</option>
-         </select>
+             <option selected value=-1>Select The Number of CDO Links</option>
+            <option value=1>1</option>
+            <option value=2>2</option> 
+            <option value=3>3</option>
+         </select> 
+         </div>
     <div id="shortestWay">
         <li><span>What is the shortest path between the selected banks?</span></li>
         <div style="display:inline-block; vertical-align:center;">The shortest path between </div>
@@ -97,6 +107,7 @@ Interactive Network of Bank and CDO
         <div style="display: inline-block; vertical-align: center;"> contains</div>
         <input type="text" name="shortestDistance" value=" " id="path" />
         <div style="display: inline-block; vertical-align: center;"> CDOs and banks</div>
+        <p id="paragraph2">Now, introduce CDO cross-ownership. That is, allow CDOs to be broken up and repacked together in a new investment(CDO). To explore this topic and answer the following questions, let's use button <strong>"CDOs are connected"</strong> to draw a new diagram for this topic. </p>
     </div>      
 </div>
 
@@ -105,10 +116,7 @@ Interactive Network of Bank and CDO
     <div id="Part2">
     <h3><strong>Part 2</strong></h3>
     </div>
-    <p>Now, introduce CDO cross-ownership. That is, allow CDOs to be broken up and repacked together
-    in a new investment(CDO). To explore this topic and answer the following questions, let's use button <strong>"CDOs are connected"</strong> to draw 
-    a new diagram for this topic. </p>
-    <li><span>Now, if CDO i fails, how many banks fails? Use <strong>"Threshold"</strong> slider from <strong>Part 1</strong> to define the percentage of originating CDOs fails and the percentage of a bank's CDOs fails.</span></li>
+    <li id="question5"><span>Now, if CDO i fails, how many banks fails? Use <strong>"Threshold"</strong> slider from <strong>Part 1</strong> to define the percentage of originating CDOs fails and the percentage of a bank's CDOs fails.</span></li>
 
 </div>
 
@@ -354,6 +362,7 @@ var bank=document.getElementById("bank");
 var bank1=document.getElementById("bankList1");
 var bank2=document.getElementById("bankList2");
 var redraw=document.getElementById("redraw");
+var original=document.getElementById("question2").innerHTML;
 
 var adding=0;
 function addEdges(){
@@ -370,11 +379,29 @@ function addEdges(){
         reset();
         adding=1;
         document.getElementById("redraw").value="CDOs are NOT connected";
+        document.getElementById("Part1").innerHTML="Part 2";
+        document.getElementById("question1").style.display="none";
+        document.getElementById("question2").innerHTML=document.getElementById("question5").innerHTML;
+        document.getElementById("question3").style.display="none";
+        document.getElementById("p1").style.display="none";
+        document.getElementById("bank_cdo").style.display="none";
+        document.getElementById("orderlist").style.display="none";
+        document.getElementById("paragraph2").style.display="none";
+        document.getElementById("paragraph1").style.display="none";
     }else{
         dataset.link.splice(dataset.link.length-2,2);
         reset();
         adding=0;
         document.getElementById("redraw").value="CDOs are connected";
+        document.getElementById("Part1").innerHTML="Part 1";
+        document.getElementById("question1").style.display="block";
+        document.getElementById("question2").innerHTML=original;
+        document.getElementById("question3").style.display="block";
+        document.getElementById("p1").style.display="block";
+        document.getElementById("bank_cdo").style.display="block";
+        document.getElementById("orderlist").style.display="block";
+        document.getElementById("paragraph2").style.display="block";
+        document.getElementById("paragraph1").style.display="block";
     }
 }
 
@@ -410,7 +437,11 @@ function shortestPath(){
         if ((starting.name=="Bank A" && ending.name=="Bank B")|(starting.name=="Bank B" && ending.name=="Bank A")){
           
           var highlightedPath=new Array();
+          if (adding==1){
             highlightedPath=["Bank A","CDO 2","Bank B"]; 
+          }else{
+            highlightedPath=["Bank A","CDO 2","Bank B"];
+          }
             node.transition()
                 .style("opacity",function(o){
                     return highlightedPath.includes(o.name)? 0.9:0.1;
@@ -426,9 +457,12 @@ function shortestPath(){
         }
 
         if ((starting.name=="Bank A" && ending.name=="Bank C")|(starting.name=="Bank C" && ending.name=="Bank A")){
-          
           var highlightedPath=new Array();
-            highlightedPath=["Bank A","CDO 1","CDO 4","Bank C"]; 
+            if (adding==1){
+                highlightedPath=["Bank A","CDO 1","CDO 4","Bank C"]; 
+            }else{
+                highlightedPath=["Bank A","CDO 2","CDO 4","Bank C","Bank B"];
+            }
             node.transition()
                 .style("opacity",function(o){
                     return highlightedPath.includes(o.name)? 0.9:0.1;
@@ -444,9 +478,13 @@ function shortestPath(){
         }
 
         if ((starting.name=="Bank B" && ending.name=="Bank C")|(starting.name=="Bank C" && ending.name=="Bank B")){
-          
+
           var highlightedPath=new Array();
-            highlightedPath=["Bank B","CDO 4","Bank C"]; 
+            if (adding==1){
+                highlightedPath=["Bank B","CDO 4","Bank C"]; 
+            }else{
+                highlightedPath=["Bank B","CDO 4","Bank C"];
+            }
             node.transition()
                 .style("opacity",function(o){
                     return highlightedPath.includes(o.name)? 0.9:0.1;
@@ -1048,11 +1086,7 @@ function reset(){
 	                 return d.size*13;
 	                 })
          .style("fill", function (d) {
-                 if (d.group==1){
-	                 return "rgba(63, 127, 191, 0.9)";
-	                 } else{
-	                        return "rgba(255, 229, 0, 0.9)";
-	                     }
+	                 return d.group==1?"rgba(63, 127, 191, 0.9)":"rgba(255, 229, 0, 0.9)";
                     });
 	node.append("text")
 	    .attr("dx",-15)
@@ -1080,19 +1114,13 @@ function reset(){
 		.attr('width', 25).attr('height', 20)
 		.attr('x', 30).attr('y', 5)
 		.style('fill', function(d) {
-			if (d.value==1){
-			return "rgba(63, 127, 191, 0.9)";
-			}
-			if (d.value==2){
-			return "rgba(255, 229, 0, 0.9)";
-			}
-		});
+			return d.value==1?"rgba(63, 127, 191, 0.9)":"rgba(255, 229, 0, 0.9)";
+			});
 
 	legend.append("text")
 		.attr('x', 70).attr('y', 19)
 		.text(function(d) { return d.name; })
-		.attr("stroke","black")
-		.style("font-size","14px");
+		.attr("stroke","black");
 
 	force.on("tick",function(){
 	link.attr("x1",function(d){
