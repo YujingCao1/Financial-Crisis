@@ -176,6 +176,13 @@ input{
 	text-align: center;
 }
 
+#span1{
+	line-height: 1.5;
+}
+p{
+	line-height: 1.5;
+}
+
 #container{
 	left: 50%;
 	position: absolute;
@@ -216,7 +223,17 @@ input{
 	width: 100%;
 	height: auto;
 }
-
+#background>li{
+	list-style: none;
+	color: rgba(26, 139, 239, 1);
+}
+#background>li::before{
+	content: '✤';
+	font-size: 120%;
+	vertical-align: middle;
+	line-height: 1;
+	margin-right: 10px;
+}
 #introduction{
 	width: 45%;
 	left: 10%;
@@ -247,7 +264,7 @@ input{
 }
 #options>li::before{
 	content: '✤';
-	font-size: 25px;
+	font-size: 200%;
 	vertical-align: middle;
 	line-height: 1.2;
 	margin-right: 10px;
