@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta name="viewPort", content="width=device-width, initial-scale=1">
+	<title>Network of Banks and CDOs in the Real World</title>
+	<script src="http://d3js.org/d3.v2.min.js?2.9.3"></script>
+	<script src="js/vendor/jquery.js"></script>
+	<script src="http://d3js.org/topojson.v0.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/plugins/foundation.slider.js'></script>
+	<script type='text/javascript' src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"> </script>
+	<script type='text/javascript' src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"> </script>
+	<link rel="stylesheet" href="style_real.css">
+	<link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Serif+Pro" rel="stylesheet">
+</head>
+<body>
+	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
+	<div id="container"></div>
+	<div id="tooltip"></div>
+</body>
+<script type="text/javascript">
+	var width=window.innerWidth;
+	var height=window.innerHeight;
+	var toggle=0; // check if the node is clicked
+
+	// Set up the color
+	var color = d3.scale.category20();
+
+
+    // Load json file 
+    var data=d3.json("realdata.json",function(json){
+    	data=json;
+   
+	// Set up the force layout
+	var force=d3.layout.force()
+		.charge(-170)
+		.linkDistance(60)
+		.size([width,height])
+		.nodes(data.nodes)
+		.links(data.links)
+		.start();
+
+	// Append a SVG to the body of the html page. Assign this SVG as an object to svg
+	var svg=d3.select("div#container").append("svg")
+		.attr("width",width*.9)
+		.attr("height",height*.9)
+		.attr('viewBox','0 0 '+width*1.1+' '+height*1.1)
+        .attr('perserveAspectRatio','xMidYMid meet');
+
+    // Create the graph data structure out of the json data
+
+    var link=svg.selectAll(".link")
+    	.data(json.links)
+    	.enter()
+    	.append("line")
+    	.attr("class","link");
+
+    var node=svg.selectAll(".node")
+    	.data(json.nodes)
+    	.enter()
+    	.append("g")
+    	.attr("class","node")
+    	.style("fill",function(d){
+    		return color(d.name);
+    	})
+    	.on('click',neighboringNodes)
+    	.call(force.drag);
+
+    node.append("circle")
+    	.attr("r",function(d){
+    		return d.size*3;
+    	});
+    
+   node.append("text")
+		.text(function(d){
+		     return d.name;
+		});
+	
+	node.attr("cx",function(d){
+		return d.x;
+	})
+		.attr("cy",function(d){
+			return d.y;
+		})
+
+	force.on("tick", tick);
+
+    function tick(){
+		link.attr("x1", function(d){
+			return d.source.x;
+		})
+			.attr("y1", function(d){
+			return d.source.y;
+		})
+			.attr("x2",function(d){
+			return d.target.x;
+		})
+			.attr("y2",function(d){
+			return d.target.y;
+		});
+		node.attr("transform", function(d){
+			return "translate("+d.x+","+d.y+")";
+		});
+	}
+
+	var linkedByIndex={}; // this is an array to store nodes and its directly connected neighbors
+	for (i=0;i<data.nodes.length;i++){
+	        linkedByIndex[i+","+i]=1;
+	};
+
+
+	data.links.forEach(function (d) {
+	    linkedByIndex[d.source.index + "," + d.target.index] = 1;
+	});
+
+	// Drag and pin a node down
+
+var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+    function dragstart(d, i) {
+        force.stop() // stops the force auto positioning before you start dragging
+    }
+
+    function dragmove(d, i) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy; 
+        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+    }
+
+    function dragend(d, i) {
+        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        tick();
+        force.resume();
+    }
+
+function neighboringNodes(d){
+     if (toggle==0){
+			     var neighborNames=[];
+				 node.each(function(o){
+				     if (isConnected(d,o)){
+					     if (d.name!=o.name){
+					         neighborNames.push(o.name);
+					         }
+						 }
+					});
+				 var neighborNamesList=neighborNames.join("<br />");
+				 var tooltipDiv = document.getElementById('tooltip');
+				     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
+					 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connections: "+"</strong>"+"<br />"+neighborNamesList;
+				     tooltipDiv.style.display = "block";
+				     d=d3.select(this).node().__data__;
+                     node.transition()
+					     .style("opacity",function(o){
+                             return neighboring(d,o)|neighboring(o,d)? 0.9:0.1;
+                            });
+                     link.transition()
+						 .style("stroke",function(o){
+						         return d.index==o.source.index | d.index==o.target.index? "#F50F0F":"#999999";
+								 })
+					     .style("opacity", function(o){
+                             return d.index==o.source.index | d.index==o.target.index? 1:0.1;
+                             });
+					toggle=1;
+		}else{
+		     var tooltipDiv=document.getElementById('tooltip');
+			      tooltipDiv.style.display="none";
+			node.style("opacity",0.9)
+				.attr("r",function(d){
+						 return d.size*13;
+					});
+            link.style("opacity",1)
+                .style("stroke","#999999")
+                .style("stroke-width","2px");
+             toggle=0;
+		}
+	}
+
+function neighboring(a,b){
+        return linkedByIndex[a.index+","+b.index];  // Use console.log to check the structure and name
+     }
+
+function isConnected(a,b){
+       return linkedByIndex[a.index+","+b.index]||linkedByIndex[b.index+","+a.index]||a.index==b.index;
+     }
+});
+</script>
+
+</html>

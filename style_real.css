@@ -1,0 +1,60 @@
+#header{
+	text-align: center;
+	background-color: rgba(26, 139, 239, 0.6);
+	color: black;
+	font-family: 'Lobster', cursive;
+	height: 8%;
+	width: 100%;
+	padding: 10px 0 10px 0;
+	top: 0;
+	left: 0;
+}
+
+.link{
+	stroke: #aaa;
+	stroke-width:2px;
+}
+
+.node text{
+  font: 10px Helvetica;
+  stroke-width:0.8px;
+  stroke:rgba(5, 5, 5, 0.7);
+  cursor:pointer;
+}
+.node circle{
+	stroke: #fff;
+}
+
+#container{
+	float: left;
+}
+
+#tooltip{
+	background:rgba(253, 249, 210, 0.4); 
+	border:solid white;
+	border-width:0.7px;
+	display: none;
+	font-size: 110%;
+	padding: 20px;
+	text-align: left;
+	top: 13%;
+	right: 0.4%;
+	position: fixed;
+	height:auto;
+	line-height: 1.5;
+	font-family: 'Source Serif Pro', serif;
+	font-family: 'Source Code Pro', monospace;
+	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#container{
+	position: relative;
+	float: left;
+	width: 60%;
+}
+
+svg{
+	top: 0%;
+	left: 0%;
+	position: absolute;
+}
