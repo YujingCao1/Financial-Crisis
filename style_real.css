@@ -12,17 +12,19 @@
 
 .link{
 	stroke: #aaa;
-	stroke-width:2px;
+	stroke-width:2.5px;
+	opacity: 0.6;
 }
 
 .node text{
   font: 10px Helvetica;
   stroke-width:0.8px;
   stroke:rgba(5, 5, 5, 0.7);
-  cursor:pointer;
 }
 .node circle{
 	stroke: #fff;
+	cursor: pointer;
+	opacity: 0.9;
 }
 
 #container{
@@ -50,7 +52,6 @@
 #container{
 	position: relative;
 	float: left;
-	width: 60%;
 }
 
 svg{

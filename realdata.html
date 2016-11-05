@@ -30,14 +30,13 @@
 	// Set up the color
 	var color = d3.scale.category20();
 
-
     // Load json file 
     var data=d3.json("realdata.json",function(json){
     	data=json;
    
 	// Set up the force layout
 	var force=d3.layout.force()
-		.charge(-170)
+		.charge(-190)
 		.linkDistance(60)
 		.size([width,height])
 		.nodes(data.nodes)
@@ -57,7 +56,16 @@
     	.data(json.links)
     	.enter()
     	.append("line")
-    	.attr("class","link");
+    	.attr("class","link")
+    	.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+       var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
 
     var node=svg.selectAll(".node")
     	.data(json.nodes)
@@ -68,7 +76,7 @@
     		return color(d.name);
     	})
     	.on('click',neighboringNodes)
-    	.call(force.drag);
+    	.call(node_drag);
 
     node.append("circle")
     	.attr("r",function(d){
@@ -173,10 +181,7 @@ function neighboringNodes(d){
 		}else{
 		     var tooltipDiv=document.getElementById('tooltip');
 			      tooltipDiv.style.display="none";
-			node.style("opacity",0.9)
-				.attr("r",function(d){
-						 return d.size*13;
-					});
+			node.style("opacity",0.9);
             link.style("opacity",1)
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
