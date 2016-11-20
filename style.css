@@ -14,7 +14,7 @@
 	    left:55%;
  	}
  	svg{
- 		width: 150%;
+ 		width: 160%;
  	}
  	body{
  		font-size:16px;
@@ -58,7 +58,7 @@
 		left: 55%;
  	}
  	svg{
- 		width: 100%;
+ 		width: 110%;
  	}
  	body{
  		font-size: 12px;
@@ -196,7 +196,7 @@ p{
 
 
 #container{
-	top: 35%;
+	top: 50%;
 	left: 55%;
 	position: absolute;
 	transform: translate(1%,-2%);
@@ -405,7 +405,7 @@ p{
 }
 
 #redraw{
-	top:33%;
+	top:48%;
 	left: 70%;
 	position: absolute;
 	text-align: center;
@@ -418,7 +418,7 @@ p{
 	font-family: 'Source Code Pro', monospace;
 }
 #reset{
-	top: 33%;
+	top: 48%;
 	left: 55%;
 	position: absolute;
 	text-align:center;

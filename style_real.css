@@ -3,7 +3,7 @@
 	background-color: rgba(26, 139, 239, 0.6);
 	color: black;
 	font-family: 'Lobster', cursive;
-	height: 8%;
+	height: 6%;
 	width: 100%;
 	padding: 10px 0 10px 0;
 	top: 0;
@@ -27,10 +27,6 @@
 	opacity: 0.9;
 }
 
-#container{
-	float: left;
-}
-
 #tooltip{
 	background:rgba(253, 249, 210, 0.4); 
 	border:solid white;
@@ -50,8 +46,9 @@
 }
 
 #container{
-	position: relative;
+	position: absolute;
 	float: left;
+	margin-top: 1.5%;
 }
 
 svg{
