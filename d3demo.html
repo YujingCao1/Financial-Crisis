@@ -28,8 +28,7 @@ Interactive Network of Bank and CDO
     <p>In the attached visualization, I have mocked up some hypothetical relationships to banks and CDOs to explore the impact of failing CDOs on the finanical sector. The visualization has the following properties:</p>
         <li><span>Each bank is noted by a blue circle; each CDO is noted by a yellow circle.</span></li>
         <li><span>Banks can own a CDO or multiple CDOs. The ownership of a CDO by a bank is denoted by a gray link between the two circles or nodes.</span></li>
-        <li><span>A given CDO can have multiple owners. That is, two banks can own a single CDO; 50% of a CDO is owned by each bank.</span></li>
-    <p>We'll use the visualization to consider several different impacts of the housing crisis (and the failure of CDOs) on the banking sector. In this first section, you will be able to consider how the failure of a CDO may affect the solvency of a bank. A bank is solvent if it has enough assets. In this simplified model, suppose that the only assets of a bank are the CDOs that it owns.</p>
+        <li><span>Click the blue button<strong>"Default"</strong> to set this visualiztion as the initial setting; click the blue button <strong>"CDOs are connected"</strong> to connect CDOs and go to part 2.</span></li>
 
 </div>
 
@@ -44,7 +43,7 @@ Interactive Network of Bank and CDO
 
     <li id="question1"><span>For each bank in the model, identify how many CDO's it own. Click on each bank to find out the answer.</span></li>
     <li id="question2"><span>For each CDO (i=1,...6), if it fails, what are the impacts on bank failure. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.</span></li><br>
-    If more thatn X percent of a bank's CDO fails, the bank will fail.</p>
+    If more thatn X percent of a bank's CDO fails, the bank will fail.
          <p><strong>Threshold</strong></p>
          <input id="sliderbar" type="range" min="0" max="100" value="0" step="1" onChange="threshold(this.value);effectOfCdO();" />
          <span id="range">0 %</span><br>
@@ -61,7 +60,7 @@ Interactive Network of Bank and CDO
 </div> 
 
 <div id="options">
-         <li id="question3"><span id="span1">Co-ownership of CDOs links together different banks that were previously unrelated. While co-ownership creates links between different banks, these links are sometimes more direct or sometimes more indirect. Consider the 'distance' between any two banks in the CDO visualization. You can choose the bank and then identify the number of entities in relationship to this bank with a given number of links.</span></li>
+         <li id="question3"><span id="span1">Choose a bank and then identify the number of entities in relationship to this bank with a given number of links.</span></li>
 <!--          <dd>
              <ol id="orderlist">
                  <li id="question4a"><span>For each bank X, how many other banks is it related to (in sum)?</span></li>
@@ -107,7 +106,7 @@ Interactive Network of Bank and CDO
         <div style="display: inline-block; vertical-align: center;"> contains</div>
         <input type="text" name="shortestDistance" value=" " id="path" />
         <div style="display: inline-block; vertical-align: center;"> CDOs and banks</div>
-        <p id="paragraph2">With increased financial securitization, CDOs started being broken up and owned by other financial intermediaries. Some of these financial intermediaries used these CDOs to make new CDOs. While the technical details get a bit complex here, what we saw is that CDOs were owned by both banks and CDOs. We want to explore in our visualization how this ownership pattern affected the financial market. To complete the work in this section, you need to click the blue button <strong>"CDOs are connected"</strong> in the top of visualization. </p>
+        <!-- <p id="paragraph2">With increased financial securitization, CDOs started being broken up and owned by other financial intermediaries. Some of these financial intermediaries used these CDOs to make new CDOs. While the technical details get a bit complex here, what we saw is that CDOs were owned by both banks and CDOs. We want to explore in our visualization how this ownership pattern affected the financial market. To complete the work in this section, you need to click the blue button <strong>"CDOs are connected"</strong> in the top of visualization. </p> -->
     </div>      
 </div>
 
@@ -360,7 +359,7 @@ var bank=document.getElementById("bank");
 var bank1=document.getElementById("bankList1");
 var bank2=document.getElementById("bankList2");
 var redraw=document.getElementById("redraw");
-var original=document.getElementById("question2").innerHTML;
+//var original=document.getElementById("question2").innerHTML;
 
 var adding=0;
 function addEdges(){
@@ -381,22 +380,22 @@ function addEdges(){
         reset();
         adding=1;
         document.getElementById("redraw").value="CDOs are NOT connected";
-        document.getElementById("Part1").innerHTML="Part 2";
+        document.getElementById("Part1").innerHTML="<strong>"+"Part 2"+"</strong>";
         document.getElementById("question1").style.display="none";
         document.getElementById("question2").innerHTML=document.getElementById("question5").innerHTML;
         document.getElementById("question3").style.display="none";
         document.getElementById("bank_cdo").style.display="none";
-        document.getElementById("paragraph2").style.display="none";
+        //document.getElementById("paragraph2").style.display="none";
     }else{
         dataset.link.splice(dataset.link.length-2,2);
         adding=0;
         document.getElementById("redraw").value="CDOs are connected";
         document.getElementById("Part1").innerHTML="Part 1";
         document.getElementById("question1").style.display="block";
-        document.getElementById("question2").innerHTML=original;
+        //document.getElementById("question2").innerHTML=original;
         document.getElementById("question3").style.display="block";
         document.getElementById("bank_cdo").style.display="block";
-        document.getElementById("paragraph2").style.display="block";
+        //document.getElementById("paragraph2").style.display="block";
         dataset.nodes[4].size=1;
         dataset.nodes[6].size=1;
         dataset.nodes[7].size=2;
@@ -416,7 +415,7 @@ function initalSet(){
         document.getElementById("question2").innerHTML=original;
         document.getElementById("question3").style.display="block";
         document.getElementById("bank_cdo").style.display="block";
-        document.getElementById("paragraph2").style.display="block";
+        //document.getElementById("paragraph2").style.display="block";
         dataset.nodes[4].size=1;
         dataset.nodes[6].size=1;
         dataset.nodes[7].size=2;
@@ -1083,8 +1082,8 @@ function reset(){
 
 	svg=d3.select("div#container")
           .append("svg")
-          .attr("width",width)
-          .attr("height",height)
+          .attr("width",width*0.9)
+          .attr("height",height*0.8)
           .attr('viewBox','0 0 '+width*1.2+' '+height*1.2)
           .attr('perserveAspectRatio','xMidYMid meet')
           .append("g");
@@ -1203,12 +1202,12 @@ function reset(){
     document.getElementById('path').value="";
     document.getElementById('reset').value="Default";
     document.getElementById("redraw").value="CDOs are connected";
-    document.getElementById("Part1").innerHTML="Part 1";
+    document.getElementById("Part1").innerHTML="<strong>"+"Part 1"+"</strong>";
     document.getElementById("question1").style.display="block";
-    document.getElementById("question2").innerHTML=original;
+    //document.getElementById("question2").innerHTML=original;
     document.getElementById("question3").style.display="block";
     document.getElementById("bank_cdo").style.display="block";
-    document.getElementById("paragraph2").style.display="block";
+    //document.getElementById("paragraph2").style.display="block";
 }
 
 

@@ -162,6 +162,7 @@ text {
 h2{
 	font-family: 'Bree Serif', serif;
 	font-size: 200%;
+	margin: 0;
 }
 
 h3{
@@ -207,7 +208,7 @@ p{
 	background-color: rgba(26, 139, 239, 0.6);
 	color: black;
 	font-family: 'Lobster', cursive;
-	height: 8%;
+	height: 4%;
 	width: 100%;
 	padding: 10px 0 10px 0;
 	top: 0;
@@ -220,7 +221,6 @@ p{
 	font-family: 'Bree Serif',serif;
 	border-radius: 5px;
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-	margin-top: 9px;
 	margin-bottom:9px;
 }
 
@@ -245,7 +245,7 @@ p{
 	content: '✤';
 	font-size: 120%;
 	vertical-align: middle;
-	line-height: 1;
+	line-height: 0.5;
 	margin-right: 10px;
 }
 #introduction{
@@ -261,7 +261,7 @@ p{
 	content: '✤';
 	font-size: 200%;
 	vertical-align: middle;
-	line-height: 1.2;
+	line-height: 1.1;
 	margin-right: 10px;
 }
 
@@ -280,7 +280,7 @@ p{
 	content: '✤';
 	font-size: 200%;
 	vertical-align: middle;
-	line-height: 1.2;
+	line-height: 1.1;
 	margin-right: 10px;
 }
 
@@ -327,7 +327,7 @@ p{
 	content: '✤';
 	font-size: 200%;
 	vertical-align: middle;
-	line-height: 1.2;
+	line-height: 1.1;
 	margin-right: 10px;
 }
 #distance{
@@ -348,7 +348,7 @@ p{
 	content: '✤';
 	font-size: 200%;
 	vertical-align: middle;
-	line-height: 1.2;
+	line-height: 1.1;
 	margin-right: 10px;
 }
 
