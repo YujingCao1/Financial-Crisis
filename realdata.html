@@ -23,7 +23,7 @@
         <p>For each CDO, if it fails, what are the impacts on bank failure. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.<br>
     If more thatn X percent of a bank's CDO fails, the bank will fail.</p>
 	     <p><strong>Threshold</strong></p>
-	     <input id="sliderbar" type="range" min="0" max="100" value=0 step="1"/>
+	     <input id="sliderbar" type="range" min="0" max="100" step="1"/>
 	     <span id="range">0 %</span><br>
 	     <label>Which CDO will fail: <br><br></label>
 	     <select id="cdo"></select>
@@ -181,8 +181,13 @@
 	});
 
     // Set threshold
+    d3.select("#sliderbar").on("input",function(){
+        update(+this.value);
+    });
+    update(0);
+
     var thresholdValue=document.getElementById('sliderbar');
-    thresholdValue.addEventListener("change",threshold(10));
+    thresholdValue.addEventListener("change",update(this.value));
     thresholdValue.addEventListener("change",effectOfCdO);
 
     // Select a CDO
@@ -218,6 +223,13 @@
         tick();
         force.resume();
     }
+
+function update(thresh) {
+
+// adjust the range text
+  d3.select("#range").text(thresh);
+  d3.select("#sliderbar").property("value", thresh);
+}
 
 function neighboringNodes(d){
      if (toggle==0){
@@ -724,6 +736,8 @@ function crossOwnership(){
 }
 
 function threshold(thresh){
+     d3.select("#range").text(thresh);
+     d3.select("#sliderbar").property("value",thresh);
      document.getElementById("range").innerHTML=thresh+" %";
 	 return thresh;
 }
