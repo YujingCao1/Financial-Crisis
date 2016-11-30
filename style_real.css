@@ -1,3 +1,6 @@
+body{
+	position: relative;
+}
 #header{
 	text-align: center;
 	background-color: rgba(26, 139, 239, 0.6);
@@ -32,7 +35,7 @@
 	border:solid white;
 	border-width:0.7px;
 	display: none;
-	font-size: 110%;
+	font-size: 100%;
 	padding: 20px;
 	text-align: left;
 	top: 13%;
@@ -47,8 +50,8 @@
 
 #container{
 	position: absolute;
-	float: left;
-	margin-top: 1.5%;
+	margin-top: -14%;
+	margin-left: 35%;
 }
 
 svg{
@@ -58,7 +61,7 @@ svg{
 }
 
 #introduction{
-	width: 45%;
+	width: 50%;
 	left: 10%;
 	text-align: justify;
 }
@@ -138,5 +141,30 @@ select{
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace; 
 	text-align: center;
-	z-index: 1000;
+}
+
+#options{
+	width:100%;
+	height:auto;
+	margin-bottom: 10px;
+}
+
+#bank{
+	height: 100%;
+	width: 32%;
+	margin-right: 1%;
+	display:inline-block;
+	font-family: 'Source Serif Pro', serif;
+	font-family: 'Source Code Pro', monospace;
+	text-align: center;
+}
+
+#cdoOwnership{
+	height: 100%;
+	width: 35%;
+	margin-left: 0.2%;
+	display:inline-block;
+	font-family: 'Source Serif Pro', serif;
+	font-family: 'Source Code Pro', monospace;
+	text-align: center;
 }
