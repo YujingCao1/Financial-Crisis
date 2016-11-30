@@ -27,7 +27,7 @@ body{
 .node circle{
 	stroke: #fff;
 	cursor: pointer;
-	opacity: 0.9;
+	opacity: 1;
 }
 
 #tooltip{
@@ -52,12 +52,6 @@ body{
 	position: absolute;
 	margin-top: -14%;
 	margin-left: 35%;
-}
-
-svg{
-	top: 0%;
-	left: 0%;
-	position: absolute;
 }
 
 #introduction{

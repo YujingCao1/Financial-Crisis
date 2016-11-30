@@ -77,11 +77,11 @@
 				return d.name
 			});
 	});
-     
+    var margin={top:-5, right:-5, bottom: -5, left: -5}
 	var width=window.innerWidth;
 	var height=window.innerHeight;
 	var toggle=0; // check if the node is clicked
-    var adding=0;
+
 	// Set up the color
 	var color = d3.scale.category20();
 
@@ -95,19 +95,28 @@
 		.linkDistance(300)
 		.size([width,height])
 		.nodes(data.nodes)
-		.links(data.links)
-		.start();
+		.links(data.links);
+    
+    // zoom
+    var zoom=d3.behavior.zoom()
+            .scaleExtent([1,10])
+            .on("zoom", zoomed);
 
 	// Append a SVG to the body of the html page. Assign this SVG as an object to svg
 	var svg=d3.select("div#container").append("svg")
 		.attr("width",width*1.1)
 		.attr("height",height)
-		.attr('viewBox','0 0 '+width*1.8+' '+height*1.2)
-        .attr('perserveAspectRatio','xMidYMid meet');
+        .attr('viewBox','0 0 '+width*1.8+' '+height*1.2)
+        .attr('perserveAspectRatio','xMidYMid meet')
+		.append("g")
+        .attr("transform","translate("+margin.left+","+margin.right+")")
+        .call(zoom);
 
+        force.start();
+    var container=svg.append("g");
     // Create the graph data structure out of the json data
 
-    var link=svg.selectAll(".link")
+    var link=container.selectAll(".link")
     	.data(json.links)
     	.enter()
     	.append("line")
@@ -122,7 +131,7 @@
         .on("drag", dragmove)
         .on("dragend", dragend);
 
-    var node=svg.selectAll(".node")
+    var node=container.selectAll(".node")
     	.data(json.nodes)
     	.enter()
     	.append("g")
@@ -202,6 +211,7 @@
     links.addEventListener("change", crossOwnership);
     // Drag and pin a node down
     var node_drag = d3.behavior.drag()
+        .origin(function(d){return d;})
         .on("dragstart", dragstart)
         .on("drag", dragmove)
         .on("dragend", dragend);
@@ -749,6 +759,10 @@ function neighboring(a,b){
 function isConnected(a,b){
        return linkedByIndex[a.index+","+b.index]||linkedByIndex[b.index+","+a.index]||a.index==b.index;
      }
+
+function zoomed(){
+    container.attr("transform","translate("+d3.event.translate+")scale("+d3.event.scale+")");
+    }
 });
 </script>
 
