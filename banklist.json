@@ -1,0 +1,246 @@
+[
+  {
+    "name": "Select a Bank",
+    "value":-1
+  },
+  {
+    "name": "UBS.Investment.Bank",
+    "col": "#87CEEB",
+    "size": 12,
+    "shape": "circle",
+    "title": "UBS.Investment.Bank",
+    "group": 1,
+    "radius":36,
+    "value":0
+  },
+  {
+    "name": "Merrill.Lynch...Maxim.Group",
+    "col": "#87CEEB",
+    "size": 3,
+    "shape": "circle",
+    "title": "Merrill.Lynch...Maxim.Group",
+    "group": 1,
+    "radius":9,
+    "value":1
+  },
+  {
+    "name": "Merrill.Lynch",
+    "col": "#87CEEB",
+    "size": 17,
+    "shape": "circle",
+    "title": "Merrill.Lynch",
+    "group": 1,
+    "radius":51,
+    "value":2
+  },
+  {
+    "name": "Lehman.Brothers...SG.Americas.Securities",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Lehman.Brothers...SG.Americas.Securities",
+    "group": 1,
+    "radius":6,
+    "value":3
+  },
+  {
+    "name": "Royal.Bank.of.Scotland",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Royal.Bank.of.Scotland",
+    "group": 1,
+    "radius":6,
+    "value":4
+  },
+  {
+    "name": "Citigroup",
+    "col": "#87CEEB",
+    "size": 11,
+    "shape": "circle",
+    "title": "Citigroup",
+    "group": 1,
+    "radius":33,
+    "value":5
+  },
+  {
+    "name": "Deutsche.Bank.Securities",
+    "col": "#87CEEB",
+    "size": 3,
+    "shape": "circle",
+    "title": "Deutsche.Bank.Securities",
+    "group": 1,
+    "radius":9,
+    "value":6
+  },
+  {
+    "name": "Lehman.Brothers",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Lehman.Brothers",
+    "group": 1,
+    "radius":6,
+    "value":7
+  },
+  {
+    "name": "RBS.Greenwich.Capital",
+    "col": "#87CEEB",
+    "size": 7,
+    "shape": "circle",
+    "title": "RBS.Greenwich.Capital",
+    "group": 1,
+    "radius":21,
+    "value":8
+  },
+  {
+    "name": "Calyon",
+    "col": "#87CEEB",
+    "size": 4,
+    "shape": "circle",
+    "title": "Calyon",
+    "group": 1,
+    "radius":12,
+    "value":9
+  },
+  {
+    "name": "Morgan.Stanley",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Morgan.Stanley",
+    "group": 1,
+    "radius":6,
+    "value":10
+  },
+  {
+    "name": "Barclays.Capital...UBS.Investment.Bank",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Barclays.Capital...UBS.Investment.Bank",
+    "group": 1,
+    "radius":3,
+    "value":11
+  },
+  {
+    "name": "Barclays.Capital",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Barclays.Capital",
+    "group": 1,
+    "radius":6,
+    "value":12
+  },
+  {
+    "name": "Mizuho.International...Mizuho.Securities.USA",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Mizuho.International...Mizuho.Securities.USA",
+    "group": 1,
+    "radius":3,
+    "value":13
+  },
+  {
+    "name": "Wachovia.Securities",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Wachovia.Securities",
+    "group": 1,
+    "radius":3,
+    "value":14
+  },
+  {
+    "name": "Credit.Suisse",
+    "col": "#87CEEB",
+    "size": 3,
+    "shape": "circle",
+    "title": "Credit.Suisse",
+    "group": 1,
+    "radius":9,
+    "value":15
+  },
+  {
+    "name": "Goldman.Sachs...Investec.Bank..UK.",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Goldman.Sachs...Investec.Bank..UK.",
+    "group": 1,
+    "radius":3,
+    "value":16
+  },
+  {
+    "name": "Fortis.Securities",
+    "col": "#87CEEB",
+    "size": 2,
+    "shape": "circle",
+    "title": "Fortis.Securities",
+    "group": 1,
+    "radius":6,
+    "value":17
+  },
+  {
+    "name": "Merrill.Lynch...Terwin.Capital",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Merrill.Lynch...Terwin.Capital",
+    "group": 1,
+    "radius":3,
+    "value":18
+  },
+  {
+    "name": "Societe.Generale.Corporate...Investment.Banking..London....Terwin.Capital",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Societe.Generale.Corporate...Investment.Banking..London....Terwin.Capital",
+    "group": 1,
+    "radius":3,
+    "value":19
+  },
+  {
+    "name": "Banc.of.America.Securities",
+    "col": "#87CEEB",
+    "size": 3,
+    "shape": "circle",
+    "title": "Banc.of.America.Securities",
+    "group": 1,
+    "radius":9,
+    "value":20
+  },
+  {
+    "name": "Bear.Stearns",
+    "col": "#87CEEB",
+    "size": 3,
+    "shape": "circle",
+    "title": "Bear.Stearns",
+    "group": 1,
+    "radius":9,
+    "value":21
+  },
+  {
+    "name": "JPMorgan",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "JPMorgan",
+    "group": 1,
+    "radius":3,
+    "value":22
+  },
+  {
+    "name": "Banc.of.America.Securities...SunTrust.Robinson.Humphrey",
+    "col": "#87CEEB",
+    "size": 1,
+    "shape": "circle",
+    "title": "Banc.of.America.Securities...SunTrust.Robinson.Humphrey",
+    "group": 1,
+    "radius":3,
+    "value":23
+  }
+]
