@@ -19,6 +19,7 @@
 </head>
 <body>
 	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
+     <input type="button" name="reset" value="Default" id="reset"/>
 	<div id="introduction">
         <p>For each CDO, if it fails, what are the impacts on bank failure. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.<br>
     If more thatn X percent of a bank's CDO fails, the bank will fail.</p>
@@ -207,8 +208,12 @@
     var bankname=document.getElementById('bank')
     bankname.addEventListener("change", crossOwnership);
 
-    var links=document.getElementById('cdoOwnership')
+    var links=document.getElementById('cdoOwnership');
     links.addEventListener("change", crossOwnership);
+
+    // Reset button
+    var resetbutton=document.getElementById('reset');
+    resetbutton.addEventListener("click",reset);
     // Drag and pin a node down
     var node_drag = d3.behavior.drag()
         .origin(function(d){return d;})
@@ -763,6 +768,146 @@ function isConnected(a,b){
 function zoomed(){
     container.attr("transform","translate("+d3.event.translate+")scale("+d3.event.scale+")");
     }
+
+function reset(){
+    d3.select("svg").remove();
+    var width=window.innerWidth,
+        height=window.innerHeight;
+    var toggle=0; 
+    var adding=0;
+     force=d3.layout.force()
+        .charge(-250)
+        .linkDistance(300)
+        .size([width,height])
+        .nodes(data.nodes)
+        .links(data.links);
+    
+    // zoom
+     zoom=d3.behavior.zoom()
+            .scaleExtent([1,10])
+            .on("zoom", zoomed);
+
+    // Append a SVG to the body of the html page. Assign this SVG as an object to svg
+     svg=d3.select("div#container").append("svg")
+        .attr("width",width*1.1)
+        .attr("height",height)
+        .attr('viewBox','0 0 '+width*1.8+' '+height*1.2)
+        .attr('perserveAspectRatio','xMidYMid meet')
+        .append("g")
+        .attr("transform","translate("+margin.left+","+margin.right+")")
+        .call(zoom);
+
+        force.start();
+     container=svg.append("g");
+    // Create the graph data structure out of the json data
+
+     link=container.selectAll(".link")
+        .data(json.links)
+        .enter()
+        .append("line")
+        .attr("class","link")
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+     node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+     node=container.selectAll(".node")
+        .data(json.nodes)
+        .enter()
+        .append("g")
+        .attr("class","node")
+        .style("fill",function(d){
+            return color(d.name);
+        })
+        .on('click',neighboringNodes)
+        .call(node_drag);
+
+    node.append("circle")
+        .attr("r",function(d){
+            return d.size*4;
+        });
+    
+   node.append("text")
+        .text(function(d){
+             return d.name;
+        });
+    
+    node.attr("cx",function(d){
+        return d.x;
+    })
+        .attr("cy",function(d){
+            return d.y;
+        })
+
+    force.on("tick", tick);
+
+    function tick(){
+        link.attr("x1", function(d){
+            return d.source.x;
+        })
+            .attr("y1", function(d){
+            return d.source.y;
+        })
+            .attr("x2",function(d){
+            return d.target.x;
+        })
+            .attr("y2",function(d){
+            return d.target.y;
+        });
+        node.attr("transform", function(d){
+            return "translate("+d.x+","+d.y+")";
+        });
+    }
+
+     linkedByIndex={}; // this is an array to store nodes and its directly connected neighbors
+    for (i=0;i<data.nodes.length;i++){
+            linkedByIndex[i+","+i]=1;
+    };
+
+
+    data.links.forEach(function (d) {
+        linkedByIndex[d.source.index + "," + d.target.index] = 1;
+    });
+
+    // Set threshold
+    d3.select("#sliderbar").on("input",function(){
+        update(+this.value);
+    });
+    update(0);
+
+     thresholdValue=document.getElementById('sliderbar');
+    thresholdValue.addEventListener("change",update(this.value));
+    thresholdValue.addEventListener("change",effectOfCdO);
+
+    // Select a CDO
+     cdoname=document.getElementById('cdo');
+    cdoname.addEventListener("change",effectOfCdO);
+    
+    // CDO Ownership
+     bankname=document.getElementById('bank')
+    bankname.addEventListener("change", crossOwnership);
+
+     links=document.getElementById('cdoOwnership')
+    links.addEventListener("change", crossOwnership);
+    // Drag and pin a node down
+     node_drag = d3.behavior.drag()
+        .origin(function(d){return d;})
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+
+
+    // go back to default
+    $('select').each(function() { this.selectedIndex = 0});
+    $('input').each(function() { this.value = 0, threshold(this.value)});
+    document.getElementById('reset').value="Default";
+}
 });
 </script>
 
