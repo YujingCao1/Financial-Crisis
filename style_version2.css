@@ -130,10 +130,22 @@ p{
 
 
 #container{
-	margin-top: 0%;
 	margin-left: 35%;
 	position: absolute;
 	transform: translate(1%,-2%);
+}
+
+#buttons{
+	margin-left:40%;
+	width: 50%;
+	position: absolute;
+}
+
+#headers{
+	top: 1%;
+	margin-left: 40%;
+	width: 50%;
+	position: absolute;
 }
 
 #header{
@@ -161,12 +173,12 @@ p{
 	content: '✤';
 	font-size: 120%;
 	vertical-align: middle;
-	line-height: 0.5;
+	line-height: 1.1;
 	margin-right: 10px;
 }
 #introduction{
 	width: 30%;
-	left: 10%;
+	margin-left: 1%;
 	text-align: justify;
 }
 #introduction>li{
@@ -184,6 +196,7 @@ p{
 
 #options{
 	width:30%;
+    margin-left: 1%;
 	height:auto;
 	margin-bottom: 10px;
 }
@@ -319,33 +332,6 @@ p{
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace;
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}
-
-#redraw{
-	margin-top:5%;
-	left: 60%;
-	position: absolute;
-	text-align: center;
-	display: inline-block;
-	background-color: rgba(26, 139, 239, 0.6);
-	border-color: steelblue;
-	border-radius: 7px;
-	border-width: 3px;
-	font-family: 'Source Serif Pro', serif;
-	font-family: 'Source Code Pro', monospace;
-}
-#reset{
-	margin-top: 5%;
-	left: 45%;
-	position: absolute;
-	text-align:center;
-	display: inline-block;
-	background-color: rgba(26, 139, 239, 0.6);
-	border-color: steelblue;
-	border-radius: 7px;
-	border-width: 3px;
-	font-family: 'Source Serif Pro', serif;
-	font-family: 'Source Code Pro', monospace;
 }
 
 li span{
