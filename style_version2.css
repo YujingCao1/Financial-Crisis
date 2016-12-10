@@ -121,22 +121,22 @@ input{
 	text-align: center;
 }
 
-#span1{
-	line-height: 1.5;
-}
 p{
 	line-height: 1.5;
 }
 
-
+#par{
+	margin-left: 1%;
+	width: 40%;
+}
 #container{
-	margin-left: 35%;
+	margin-left: 40%;
 	position: absolute;
 	transform: translate(1%,-2%);
 }
 
 #buttons{
-	margin-left:40%;
+	margin-left:45%;
 	width: 50%;
 	position: absolute;
 }
@@ -156,8 +156,8 @@ p{
 	height: 4%;
 	width: 100%;
 	padding: 10px 0 10px 0;
-	top: 0;
-	left: 0;
+	margin-top: 0;
+	margin-left: 0;
 }
 
 
@@ -166,31 +166,28 @@ p{
 	height: auto;
 }
 #background>li{
-	list-style: none;
-	color: rgba(26, 139, 239, 1);
+	list-style: square;
 }
 #background>li::before{
-	content: '✤';
 	font-size: 120%;
 	vertical-align: middle;
 	line-height: 1.1;
 	margin-right: 10px;
 }
 #introduction{
-	width: 30%;
+	width: 40%;
 	margin-left: 1%;
 	text-align: justify;
 }
 #introduction>li{
-	list-style: none;
-	color: rgba(26, 139, 239, 1);
+	list-style: square;
 }
 #introduction>li::before{
-	content: '✤';
+
 	font-size: 200%;
 	vertical-align: middle;
 	line-height: 1.1;
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 
@@ -202,16 +199,9 @@ p{
 }
 
 #options>li{
-	list-style: none;
-	color: rgba(26, 139, 239, 1);
+	list-style: square;
 }
-#options>li::before{
-	content: '✤';
-	font-size: 200%;
-	vertical-align: middle;
-	line-height: 1.1;
-	margin-right: 10px;
-}
+
 
 #cdo{
 	width: 40%;
@@ -249,16 +239,9 @@ p{
 }
 
 #shortestWay>li{
-	list-style: none;
-	color: rgba(26, 139, 239, 1);
+	list-style: square;
 }
-#shortestWay>li::before{
-	content: '✤';
-	font-size: 200%;
-	vertical-align: middle;
-	line-height: 1.1;
-	margin-right: 10px;
-}
+
 #distance{
 	width: 45%;
 	height: auto;
@@ -270,16 +253,10 @@ p{
 }
 
 #distance>li{
-	list-style: none;
+	list-style: square;
 	color: rgba(26, 139, 239, 1);
 }
-#distance>li::before{
-	content: '✤';
-	font-size: 200%;
-	vertical-align: middle;
-	line-height: 1.1;
-	margin-right: 10px;
-}
+
 
 #bankList1{
 	height: 20%;
@@ -308,13 +285,13 @@ p{
 }
 
 
-#path, #path_bank,select{
+/*#path, #path_bank,select{
 	border-radius:7px;
 	border-width:2.5px;
 	border-color:rgba(63, 127, 191, 0.9);
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
-
+*/
 #tooltip{
 	background:rgba(253, 249, 210, 0.4); 
 	border:solid white;
