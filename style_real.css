@@ -20,7 +20,7 @@ body{
 }
 
 .node text{
-  font: 10px Helvetica;
+  font: 15px Helvetica;
   stroke-width:0.8px;
   stroke:rgba(5, 5, 5, 0.7);
 }
@@ -50,13 +50,14 @@ body{
 
 #container{
 	position: absolute;
-	margin-top: -14%;
+	margin-top: 1%;
 	margin-left: 35%;
 }
 
 #introduction{
-	width: 50%;
-	left: 10%;
+	width: 40%;
+	margin-top: 1%;
+	margin-left: 1%;
 	text-align: justify;
 }
 input[type=range]{
@@ -121,12 +122,12 @@ input[type=range]:focus::-moz-range-track{
 input{
 	text-align: center;
 }
-select{
+/*select{
 	border-radius:7px;
 	border-width:2.5px;
 	border-color:rgba(63, 127, 191, 0.9);
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}
+}*/
 
 #cdo{
 	width: 30%;
@@ -164,12 +165,16 @@ select{
 }
 
 #reset{
-	top:27%;
-	right: 1%;
+	top:107%;
+	left: 1%;
+	height: 10%;
 	position: absolute;
 	text-align:center;
 	display: inline-block;
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace;
 	cursor: pointer;
+}
+text{
+	font-size: 25px;
 }

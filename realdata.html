@@ -11,7 +11,6 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.js'></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/plugins/foundation.slider.js'></script>
 	<script type='text/javascript' src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"> </script>
-	<script type='text/javascript' src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"> </script>
 	<link rel="stylesheet" href="style_real.css">
 	<link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro" rel="stylesheet">
@@ -19,27 +18,34 @@
 </head>
 <body>
 	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
-     <input type="button" name="reset" value="Default" id="reset"/>
+    <div id="container"></div>
+    <div id="reset_button">
+        <input type="button" name="reset" value="Reset" id="reset" style="background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)"/> 
+    </div>
+    
 	<div id="introduction">
-        <p>For each CDO, if it fails, what are the impacts on bank failure. Use <strong>"Threshold"</strong> slider bar to define the percentage of a bank's CDO fails.<br>
-    If more thatn X percent of a bank's CDO fails, the bank will fail.</p>
-	     <p><strong>Threshold</strong></p>
+         <li id="question1"><span>Click on a bank to see how many CDOs it owns. The ownership of a CDO by a bank is denoted by a gray link between two circles or nodes.</span></li><br>
+        <li id="question2"><span>If more than X percent of a bank's CDOs fail, the bank will fail.</span></li>
+         <p><strong>Define X:</strong></p>
 	     <input id="sliderbar" type="range" min="0" max="100" step="1"/>
-	     <span id="range">0 %</span><br>
-	     <label>Which CDO will fail: <br><br></label>
-	     <select id="cdo"></select>
+	     <span id="range">0 %</span><br><br>
+	     <select id="cdo"></select><br><br>
+         
          <div id="options">
-         <p>Choose a bank and then identify the number of entities in relationship to this bank with a given number of links.</p>
+             <li id="question3"><span id="span1">
+             <div style="display: inline-block;vertical-align: center;">Bank(s) related to</div>
              <select id="bank" name="Bank_explore"></select>
+             <div style="display: inline-block;vertical-align: center;">within</div>
              <select id="cdoOwnership" name="CDO_Ownership">
                 <option selected value=-1>Select The Number of CDO Links</option>
                 <option value=1>1</option>
                 <option value=2>2</option> 
                 <option value=3>3</option>
              </select> 
+             <div style="display: inline-block;vertical-align: center;">CDO links</div>
+             </span></li>
          </div>
     </div>
-    <div id="container"></div>
 	<div id="tooltip"></div>
 </body>
 <script type="text/javascript">
@@ -92,7 +98,7 @@
     
 	// Set up the force layout
 	var force=d3.layout.force()
-		.charge(-250)
+		.charge(-350)
 		.linkDistance(300)
 		.size([width,height])
 		.nodes(data.nodes)
@@ -138,8 +144,8 @@
     	.append("g")
     	.attr("class","node")
     	.style("fill",function(d){
-    		return color(d.name);
-    	})
+             return d.group==1?"rgba(63, 127, 191, 1)":"rgba(255, 229, 0, 1)";
+        })
     	.on('click',neighboringNodes)
     	.call(node_drag);
 
@@ -151,7 +157,10 @@
    node.append("text")
 		.text(function(d){
 		     return d.name;
-		});
+		})
+        .attr("stroke", "black")
+        .style("fill","black")
+        .style("font-size", "15px");
 	
 	node.attr("cx",function(d){
 		return d.x;
@@ -159,8 +168,35 @@
 		.attr("cy",function(d){
 			return d.y;
 		})
+var text=container.selectAll(".text")
+    .data(json.nodes)
+    .enter()
+    .append("text");
 
 	force.on("tick", tick);
+var colordata=[{value:1,name:"Bank"},{value:2,name:"CDO"}];
+
+var legend = svg.selectAll('.legend')
+                .data(colordata)
+                .enter().append('g')
+                .attr('class', 'legend')
+                .attr('ID', function(d) { return d.name })
+                .attr("transform", function(d,i) {
+                        return "translate(" + 60 + "," + (i+3)*50 + ")";
+                });
+
+    legend.append("rect")
+        .attr('width', 50).attr('height', 40)
+        .attr('x', 200).attr('y', -300)
+        .style('fill', function(d) {
+            return d.value==1?"rgba(63, 127, 191, 0.9)":"rgba(255, 229, 0, 0.9)";
+            });
+
+    legend.append("text")
+        .attr('x', 280).attr('y', -270)
+        .text(function(d) { return d.name; })
+        .attr("stroke","black")
+        .attr("font-size", "22px");
 
     function tick(){
 		link.attr("x1", function(d){
@@ -273,6 +309,13 @@ function neighboringNodes(d){
 					     .style("opacity", function(o){
                              return d.index==o.source.index | d.index==o.target.index? 1:0.1;
                              });
+
+                    text.attr("stroke", "black")
+                        .style("fill","black")
+                        .transition()
+                        .style("font-size", function(o){
+                            return neighboring(d,o)|neighboring(o,d)? "20px":"15px";
+                        });
 					toggle=1;
 		}else{
 		     var tooltipDiv=document.getElementById('tooltip');
@@ -281,6 +324,13 @@ function neighboringNodes(d){
             link.style("opacity",1)
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
+            
+            text.attr("stroke", "black")
+                .style("fill","black")
+                .transition()
+                .style("font-size", function(o){
+                    return neighboring(d,o)|neighboring(o,d)? "15px":"20px";
+                });
              toggle=0;
 		}
 	}
@@ -449,87 +499,6 @@ function effectOfCdO(){
             .style("opacity",function(o){
                 return nodeLeft.includes(data.nodes[o.source.index])|nodeLeft.includes(data.nodes[o.target.index])? 0.1:0.9;
             });
-        // Fade out the failing nodes and its edges.
-			    //   	node.transition()
-				   //       .delay(100)
-				   //       .duration(3000)
-						 // .style("opacity",function(o){
-						 //      return cdoNeighborPartial1.includes(o)? 0.1:0.9;
-							// });	
-       //               node.transition()
-       //                  .delay(100)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return directNodes2.includes(o)|cdoNeighborPartial1.includes(o)? 0.1:0.9;
-       //                  });
-
-       //          for (var dd=0;dd<undirectNodes1.length;dd++){
-       //              node.transition()
-       //                  .delay(4100+dd*2000)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)? 0.1:0.9;
-       //                  });
-       //          }
-
-
-       //          for (var dd=0;dd<undirectNodes2.length;dd++){
-       //              node.transition()
-       //                  .delay(4100+dd*2000)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return undirectNodes2.slice(0,dd+1).some(elem =>elem==o)|undirectNodes1.some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)? 0.1:0.9;
-       //                  }); 
-       //          }
-
-
-       //              node.transition()
-       //                  .delay(8100)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return undirectNodes2.some(elem =>elem==o)|undirectNodes1.some(elem =>elem.includes(o))|cdoNeighborPartial1.includes(o)|directNodes2.includes(o)|undirectNodes3.includes(o)? 0.1:0.9;
-       //                  });
-
-
-		     //        link.transition()
-       //                  .delay(100)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-						 //      return cdoNeighborPartial1.includes(data.nodes[o.source.index])|cdoNeighborPartial1.includes(data.nodes[o.target.index])?0.1:1;
-							// });	
-
-       //               link.transition()
-       //                  .delay(2100)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                        return cdoNeighborPartial1.includes(data.nodes[o.source.index])|cdoNeighborPartial1.includes(data.nodes[o.target.index])|directNodes2.includes(data.nodes[o.source.index])|directNodes2.includes(data.nodes[o.target.index])?0.1:1;
-       //                      }); 
-
-       //          for (var dd=0; dd<undirectNodes1.length; dd++){
-       //              link.transition()
-       //                  .delay(4100+dd*2000)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return cdoNeighborPartial1.includes(data.nodes[o.source.index])|cdoNeighborPartial1.includes(data.nodes[o.target.index])|undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(data.nodes[o.source.index]))|undirectNodes1.slice(0,dd+1).some(elem =>elem.includes(data.nodes[o.target.index]))|directNodes2.includes(data.nodes[o.source.index])|directNodes2.includes(data.nodes[o.target.index])? 0.1:1;
-       //                  });
-       //          }
-
-       //          for (var dd=0;dd<undirectNodes2.length;dd++){
-       //              link.transition()
-       //                  .delay(6100+dd*2000)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return cdoNeighborPartial1.includes(data.nodes[o.source.index])|cdoNeighborPartial1.includes(data.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(data.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(data.nodes[o.target.index]))|undirectNodes2.slice(0,dd+1).some(elem =>elem==data.nodes[o.source.index])|undirectNodes2.slice(0,dd+1).some(elem =>elem==data.nodes[o.target.index])|directNodes2.includes(data.nodes[o.source.index])|directNodes2.includes(data.nodes[o.target.index])? 0.1:1;
-       //                  }); 
-       //          }
-
-
-       //              link.transition()
-       //                  .delay(8100)
-       //                  .duration(3000)
-       //                  .style("opacity",function(o){
-       //                      return cdoNeighborPartial1.includes(data.nodes[o.source.index])|cdoNeighborPartial1.includes(data.nodes[o.target.index])|undirectNodes1.some(elem =>elem.includes(data.nodes[o.source.index]))|undirectNodes1.some(elem =>elem.includes(data.nodes[o.target.index]))|undirectNodes2.some(elem =>elem==data.nodes[o.source.index])|undirectNodes2.some(elem =>elem==data.nodes[o.target.index])|directNodes2.includes(data.nodes[o.source.index])|directNodes2.includes(data.nodes[o.target.index])|undirectNodes3.includes(data.nodes[o.source.index])|undirectNodes3.includes(data.nodes[o.target.index])? 0.1:1;
-       //                  });
             }
     }
 
@@ -776,7 +745,7 @@ function reset(){
     var toggle=0; 
     var adding=0;
      force=d3.layout.force()
-        .charge(-250)
+        .charge(-350)
         .linkDistance(300)
         .size([width,height])
         .nodes(data.nodes)
@@ -822,7 +791,7 @@ function reset(){
         .append("g")
         .attr("class","node")
         .style("fill",function(d){
-            return color(d.name);
+            return d.group==1?"rgba(63, 127, 191, 1)":"rgba(255, 229, 0, 1)";
         })
         .on('click',neighboringNodes)
         .call(node_drag);
@@ -835,7 +804,9 @@ function reset(){
    node.append("text")
         .text(function(d){
              return d.name;
-        });
+        })
+        .attr("stroke","black")
+        .attr("fill","black");
     
     node.attr("cx",function(d){
         return d.x;
@@ -845,6 +816,27 @@ function reset(){
         })
 
     force.on("tick", tick);
+    legend = svg.selectAll('.legend')
+                .data(colordata)
+                .enter().append('g')
+                .attr('class', 'legend')
+                .attr('ID', function(d) { return d.name })
+                .attr("transform", function(d,i) {
+                        return "translate(" + 60 + "," + (i+3)*50 + ")";
+                });
+
+    legend.append("rect")
+        .attr('width', 50).attr('height', 40)
+        .attr('x', 200).attr('y', -300)
+        .style('fill', function(d) {
+            return d.value==1?"rgba(63, 127, 191, 0.9)":"rgba(255, 229, 0, 0.9)";
+            });
+
+    legend.append("text")
+        .attr('x', 280).attr('y', -270)
+        .text(function(d) { return d.name; })
+        .attr("stroke","black")
+        .attr("font-size", "22px");
 
     function tick(){
         link.attr("x1", function(d){
@@ -880,12 +872,12 @@ function reset(){
     });
     update(0);
 
-     thresholdValue=document.getElementById('sliderbar');
+    thresholdValue=document.getElementById('sliderbar');
     thresholdValue.addEventListener("change",update(this.value));
     thresholdValue.addEventListener("change",effectOfCdO);
 
     // Select a CDO
-     cdoname=document.getElementById('cdo');
+    cdoname=document.getElementById('cdo');
     cdoname.addEventListener("change",effectOfCdO);
     
     // CDO Ownership
@@ -906,7 +898,7 @@ function reset(){
     // go back to default
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
-    document.getElementById('reset').value="Default";
+    document.getElementById('reset').value="Reset";
 }
 });
 </script>
