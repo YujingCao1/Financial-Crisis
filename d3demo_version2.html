@@ -33,9 +33,11 @@ Interactive Network of Banks and CDOs
 </div> -->
 <div id="buttons">
     <form>
-        CDOs: <input type="radio" name="con_discon", value="connect" id="cdo_connect">Connect
-        <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect">Disconnect
+        <strong>CDOs:</strong><input type="radio" name="con_discon", value="connect" id="cdo_connect">Connect
+        <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect" checked>Disconnect
     </form>
+    <p id="status"><strong>Current Status: </strong>CDOs are NOT connected</p>
+    <input type="button" name="reset" value="Reset" id="reset" onclick="reset();initalSet();" style="float: left;background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)" />
 </div>
 <div id="par">
     <p>This visualization aims to demonstrate hypothetical relationship between banks and CDOs and the impact of failing CDOs on the financial sector.</p>
@@ -349,12 +351,14 @@ var cdo_disconnect=document.getElementById("cdo_disconnect").checked;
 d3.selectAll("input[id=cdo_connect]").on("change",function(){
     cdo_connect=true;
     cdo_disconnect=false
+    document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are connected";
     addEdges();
 });
 
 d3.selectAll("input[id=cdo_disconnect]").on("change",function(){
     cdo_disconnect=true;
     cdo_connect=false;
+    document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are NOT connected";
     addEdges();
 });
 
@@ -1163,8 +1167,7 @@ function reset(){
 
     bank1=document.getElementById("bankList1");
     bank2=document.getElementById("bankList2");
-    // redraw=document.getElementById("redraw");
-    // status=document.getElementById("status");
+    status=document.getElementById("status");
 
     
     if (bank1.length==bank2.length){
@@ -1189,8 +1192,27 @@ function reset(){
     //document.getElementById('redraw').value="Connect CDOs";
     document.getElementById('path').value="";
     document.getElementById('path_bank').value="";
-    // document.getElementById('reset').value="Reset";
-    // document.getElementById("status").value="CDOs are NOT connected";
+    document.getElementById('reset').value="Reset";
+    document.getElementById("status").value="CDOs are NOT connected";
+
+    cdo_connect=document.getElementById("cdo_connect").checked;
+    cdo_disconnect=document.getElementById("cdo_disconnect").checked;
+    cdo_connect=false;
+    cdo_disconnect=true;
+
+//     d3.selectAll("input[id=cdo_connect]").on("change",function(){
+//     cdo_connect=true;
+//     cdo_disconnect=false
+//     document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are connected";
+//     addEdges();
+// });
+
+// d3.selectAll("input[id=cdo_disconnect]").on("change",function(){
+//     cdo_disconnect=true;
+//     cdo_connect=false;
+//     document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are NOT connected";
+//     addEdges();
+// });
 }
 
             </script>
