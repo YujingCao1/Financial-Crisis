@@ -50,7 +50,7 @@ body{
 
 #container{
 	position: absolute;
-	margin-top: 1%;
+	margin-top: 0.1%;
 	margin-left: 35%;
 }
 
@@ -58,8 +58,8 @@ body{
 	width: 40%;
 	margin-top: 1%;
 	margin-left: 1%;
-	text-align: justify;
 }
+
 input[type=range]{
     -webkit-appearance:none;
 }

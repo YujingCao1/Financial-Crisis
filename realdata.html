@@ -309,13 +309,6 @@ function neighboringNodes(d){
 					     .style("opacity", function(o){
                              return d.index==o.source.index | d.index==o.target.index? 1:0.1;
                              });
-
-                    text.attr("stroke", "black")
-                        .style("fill","black")
-                        .transition()
-                        .style("font-size", function(o){
-                            return neighboring(d,o)|neighboring(o,d)? "20px":"15px";
-                        });
 					toggle=1;
 		}else{
 		     var tooltipDiv=document.getElementById('tooltip');
@@ -324,13 +317,6 @@ function neighboringNodes(d){
             link.style("opacity",1)
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
-            
-            text.attr("stroke", "black")
-                .style("fill","black")
-                .transition()
-                .style("font-size", function(o){
-                    return neighboring(d,o)|neighboring(o,d)? "15px":"20px";
-                });
              toggle=0;
 		}
 	}
@@ -486,15 +472,25 @@ function effectOfCdO(){
     }
         
         nodeLeft.push(d);
-        //cdoNeighborPartial1.push(d);
+        cdoNeighborPartial1.push(d);
         node.transition()
-            .delay(100)
+            .style("fill", function(o){
+                if (o==d){
+                    return "red";
+                }if(o.group==1){
+                    return "rgba(63, 127, 191, 0.9)";
+                }else{
+                    return "rgba(255, 229, 0, 0.9)";
+                }
+            });
+        node.transition()
+            .delay(1200)
             .duration(5000)
             .style("opacity",function(o){
-                return nodeLeft.includes(o)?0.1:0.9;
+                return nodeLeft.includes(o)?0.1:1;
             });
         link.transition()
-            .delay()
+            .delay(3000)
             .duration(5000)
             .style("opacity",function(o){
                 return nodeLeft.includes(data.nodes[o.source.index])|nodeLeft.includes(data.nodes[o.target.index])? 0.1:0.9;
