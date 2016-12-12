@@ -37,7 +37,6 @@ Interactive Network of Banks and CDOs
         <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect" checked>Disconnect
     </form>
     <p id="status"><strong>Current Status: </strong>CDOs are NOT connected</p>
-    <input type="button" name="reset" value="Reset" id="reset" onclick="reset();initalSet();" style="float: left;background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)" />
 </div>
 <div id="par">
     <p>This visualization aims to demonstrate hypothetical relationship between banks and CDOs and the impact of failing CDOs on the financial sector.</p>
@@ -61,7 +60,7 @@ Interactive Network of Banks and CDOs
 
 <div id="options">
          <li id="question3"><span id="span1">
-         <div style="display: inline-block;vertical-align: center;">Other banks related to</div>
+         <div style="display: inline-block;vertical-align: center;">Bank(s) related to</div>
             <select id="bank" name="Bank_explore" onchange="crossOwnership();">
             <option selected value=-1>Select a Bank</option>
             <option value=0>Bank A</option>
@@ -102,8 +101,12 @@ Interactive Network of Banks and CDOs
         <input type="text" name="shortestDistance1" value=" " id="path_bank" />
         <div style="display: inline-block; vertical-align: center;"> bank(s).</div>
         </span></li>
-    </div>      
+    </div>    
 </div>
+<div id="reset_button">
+     <input type="button" name="reset" value="Reset" id="reset" onclick="reset();" style="background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)" />  
+</div>
+       
 
 <div id="tooltip"></div>
 
@@ -347,6 +350,8 @@ var status=document.getElementById("status");
 var cdo_connect=document.getElementById("cdo_connect").checked;
 var cdo_disconnect=document.getElementById("cdo_disconnect").checked;
 
+console.log(cdo_disconnect);
+console.log(cdo_connect);
 
 d3.selectAll("input[id=cdo_connect]").on("change",function(){
     cdo_connect=true;
@@ -381,13 +386,9 @@ function addEdges(){
         dataset.nodes[5].size=3;
         reset();
         adding=1;
-        // document.getElementById("redraw").value="Disconnect CDOs";
-        // document.getElementById("status").value="CDOs are connected";
     }else{
         dataset.link.splice(dataset.link.length-2,2);
         adding=0;
-        // document.getElementById("status").value="CDOs are NOT connected";
-        // document.getElementById("redraw").value="Connect CDOs";
         dataset.nodes[4].size=1;
         dataset.nodes[6].size=1;
         dataset.nodes[7].size=2;
@@ -401,8 +402,9 @@ function initalSet(){
     if (adding==1){
         dataset.link.splice(dataset.link.length-2,2);
         adding=0;
-        document.getElementById("redraw").value="Connect CDOs";
-        document.getElementById("status").value="CDOs are NOT connected";
+        document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are NOT connected";
+        cdo_disconnect=true;
+        cdo_connect=false;
         dataset.nodes[4].size=1;
         dataset.nodes[6].size=1;
         dataset.nodes[7].size=2;
@@ -1167,7 +1169,6 @@ function reset(){
 
     bank1=document.getElementById("bankList1");
     bank2=document.getElementById("bankList2");
-    status=document.getElementById("status");
 
     
     if (bank1.length==bank2.length){
@@ -1189,30 +1190,9 @@ function reset(){
     // go back to default
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
-    //document.getElementById('redraw').value="Connect CDOs";
     document.getElementById('path').value="";
     document.getElementById('path_bank').value="";
     document.getElementById('reset').value="Reset";
-    document.getElementById("status").value="CDOs are NOT connected";
-
-    cdo_connect=document.getElementById("cdo_connect").checked;
-    cdo_disconnect=document.getElementById("cdo_disconnect").checked;
-    cdo_connect=false;
-    cdo_disconnect=true;
-
-//     d3.selectAll("input[id=cdo_connect]").on("change",function(){
-//     cdo_connect=true;
-//     cdo_disconnect=false
-//     document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are connected";
-//     addEdges();
-// });
-
-// d3.selectAll("input[id=cdo_disconnect]").on("change",function(){
-//     cdo_disconnect=true;
-//     cdo_connect=false;
-//     document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are NOT connected";
-//     addEdges();
-// });
 }
 
             </script>

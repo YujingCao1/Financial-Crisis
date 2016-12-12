@@ -311,10 +311,11 @@ p{
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-#reset{
-	top: 1%;
-	right: 1%;
+#reset_button{
+	margin-top:0.5%;
+	margin-left: 1%;
 	position: absolute;
+	width: 50%;
 }
 li span{
 	color: black;
