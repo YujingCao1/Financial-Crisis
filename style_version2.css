@@ -130,20 +130,20 @@ p{
 	width: 40%;
 }
 #container{
-	margin-left: 40%;
+	margin-left: 42%;
 	position: absolute;
 	transform: translate(1%,-2%);
 }
 
 #buttons{
-	margin-left:45%;
+	margin-left:50%;
 	width: 50%;
 	position: absolute;
 }
 
 #headers{
 	top: 1%;
-	margin-left: 40%;
+	margin-left: 42%;
 	width: 50%;
 	position: absolute;
 }
@@ -192,7 +192,7 @@ p{
 
 
 #options{
-	width:30%;
+	width:40%;
     margin-left: 1%;
 	height:auto;
 	margin-bottom: 10px;
@@ -311,6 +311,11 @@ p{
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
+#reset{
+	top: 1%;
+	right: 1%;
+	position: absolute;
+}
 li span{
 	color: black;
 }
