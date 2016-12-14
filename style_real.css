@@ -178,3 +178,35 @@ input{
 text{
 	font-size: 25px;
 }
+
+#about{
+	top: 240%;
+	left: 1%;
+	position: absolute;
+	float: left;
+}
+#acknowledge{
+	top: 250%;
+	margin-left: 1%;
+	position: absolute;
+	float: left;
+	border:none;
+	border-width:0.7px;
+	display: none;
+	font-size: 110%;
+	padding: 20px;
+	text-align: left;
+	width: 100%;
+	height: auto;
+	font-size: 14px;
+}
+.button{
+	background-color: rgba(26, 139, 239, 0.1);
+	border: none;
+	color: black;
+	padding: 10px 25px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+}

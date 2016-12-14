@@ -20,7 +20,7 @@
 	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
     <div id="container"></div>
     <div id="reset_button">
-        <input type="button" name="reset" value="Reset" id="reset" style="background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)"/> 
+        <input type="button" name="reset" value="Reset" id="reset" style="background-color: rgba(26, 139, 239, 0.1);border: none; width: 10%; font-size: 14px;"/> 
     </div>
     
 	<div id="introduction">
@@ -47,6 +47,10 @@
          </div>
     </div>
 	<div id="tooltip"></div>
+    <div id="about">
+        <button class="button" id="acknowledgement_button">Acknowledge</button>
+    </div>
+    <div id="acknowledge"></div>
 </body>
 <script type="text/javascript">
 
@@ -250,6 +254,10 @@ var legend = svg.selectAll('.legend')
     // Reset button
     var resetbutton=document.getElementById('reset');
     resetbutton.addEventListener("click",reset);
+
+    // Acknowledge
+    var acknowledgement_button=document.getElementById('acknowledgement_button');
+    acknowledgement_button.addEventListener("click",acknowledge);
     // Drag and pin a node down
     var node_drag = d3.behavior.drag()
         .origin(function(d){return d;})
@@ -922,6 +930,19 @@ function reset(){
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('reset').value="Reset";
+}
+var acknowledge_1=0;
+function acknowledge(){
+    if (acknowledge_1==0){
+        var acknowledgement=document.getElementById('acknowledge')
+        acknowledgement.innerHTML="Data is downloaded from <a href=https://www.propublica.org/special/interactive-cdos-interlocking-ownership>"+" ProPublica.org</a>"+" by Bonnie Brooks."+"This visualization is designed and built by Yujing Cao at"+"<a href=http:"+"//dasil.grinnell.edu/>"+" DASIL</a>.";
+        acknowledgement.style.display = "block";
+        acknowledge_1=1;
+    }else{
+        var acknowledgement=document.getElementById('acknowledge')
+        acknowledgement.style.display = "none";
+        acknowledge_1=0;
+    }
 }
 });
 </script>
