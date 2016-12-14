@@ -60,7 +60,7 @@ Interactive Network of Banks and CDOs
 
 <div id="options">
          <li id="question3"><span id="span1">
-         <div style="display: inline-block;vertical-align: center;">Bank(s) related to</div>
+         <div style="display: inline-block;vertical-align: center;">Identify bank(s) related to</div>
             <select id="bank" name="Bank_explore" onchange="crossOwnership();">
             <option selected value=-1>Select a Bank</option>
             <option value=0>Bank A</option>
@@ -104,10 +104,13 @@ Interactive Network of Banks and CDOs
     </div>    
 </div>
 <div id="reset_button">
-     <input type="button" name="reset" value="Reset" id="reset" onclick="reset();" style="background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)" />  
+     <input type="button" name="reset" value="Reset" id="reset" onclick="reset();" style="background-color: rgba(26, 139, 239, 0.1);border: none; padding: 10px 20px; font-size: 14px; width: 15.5%;" />  
 </div>
-       
 
+<div id="about">
+    <button class="button" onclick="acknowledge();">Acknowledge</button>
+</div>   
+<div id="acknowledge"></div>
 <div id="tooltip"></div>
 
 <script type="text/javascript">
@@ -1061,7 +1064,22 @@ function threshold(thresh){
      document.getElementById("range").innerHTML=thresh+" %";
      return thresh;
 }
-              
+
+var acknowledge_1=0;
+function acknowledge(){
+    if (acknowledge_1==0){
+        var acknowledgement=document.getElementById('acknowledge')
+        acknowledgement.innerHTML="<a href=http:"+"//dasil.grinnell.edu/>"+" DASIL</a>";
+        //acknowledgement.innerHTML="This visualization is designed and built by Yujing Cao at"+"<a href=http:"+"//dasil.grinnell.edu/>"+" DASIL</a>.";
+        acknowledgement.style.display = "block";
+        acknowledge_1=1;
+    }else{
+        var acknowledgement=document.getElementById('acknowledge')
+        acknowledgement.style.display = "none";
+        acknowledge_1=0;
+    }
+}
+
 function reset(){
     d3.select("svg").remove();
     var width=window.innerWidth,
