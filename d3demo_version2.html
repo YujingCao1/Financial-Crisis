@@ -599,9 +599,10 @@ function crossOwnership(){
                         }
                     });
                     
-                    if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
-                        nodeHightlight.push(d)
-                    }
+                    // if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
+                    //     nodeHightlight.push(d)
+                    // }
+                    nodeHightlight.push(d)
 
                     node.transition()
                         .delay(100)
@@ -667,10 +668,10 @@ function crossOwnership(){
                     })
                  });
 
-                 if (connected3.length!=0&&!connected3.includes(d)){
-                    connected3.push(d);
-                 }
-
+                 // if (connected3.length!=0&&!connected3.includes(d)){
+                 //    connected3.push(d);
+                 // }
+                 connected3.push(d);
 
                  node.transition()
                      .delay(100)
