@@ -24,13 +24,7 @@ Interactive Network of Banks and CDOs
 </h2>
 </div>
 <div id="container"></div>
-<!-- <div id="buttons">
-    <h3 style="float: left; margin-right: 7%">Action</h3>
-    <h3 style="float: left;">Current Status</h3><br><br>
-    <input type="button" name="newgraph" value="Connect CDOs" id="redraw" onclick="addEdges();" style="float: left; margin-right: 3%; background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1);" />
-    <input type="text" name="status" value="CDOs are NOT connected" id="status" style="float: left; margin-right: 3%;background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)"> 
-    <input type="button" name="reset" value="Reset" id="reset" onclick="reset();initalSet();" style="float: left;background-color: rgba(26, 139, 239, 0.1);border-color: rgba(26, 139, 239, 0.1)" />
-</div> -->
+
 <div id="buttons">
     <form>
         <strong>CDOs:</strong><input type="radio" name="con_discon", value="connect" id="cdo_connect">Connect
@@ -472,10 +466,22 @@ function shortestPath(){
           var highlightedPath=new Array();
             if (adding==1){
                 highlightedPath=["Bank A","CDO 1","CDO 4","Bank C"]; 
+                 node.transition()
+                .style("opacity",function(o){
+                    return highlightedPath.includes(o.name)? 0.9:0.1;
+                    });
+            link.transition()
+                .style("stroke",function(o){
+                        return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
+                     })
+                .style("opacity", function(o){
+                    return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
+                    });
+            document.getElementById('path').value=2;
+            document.getElementById('path_bank').value=0;
             }else{
                 highlightedPath=["Bank A","CDO 2","CDO 4","Bank C","Bank B"];
-            }
-            node.transition()
+                 node.transition()
                 .style("opacity",function(o){
                     return highlightedPath.includes(o.name)? 0.9:0.1;
                     });
@@ -488,6 +494,7 @@ function shortestPath(){
                     });
             document.getElementById('path').value=2;
             document.getElementById('path_bank').value=1;
+            }
         }
 
         if ((starting.name=="Bank B" && ending.name=="Bank C")|(starting.name=="Bank C" && ending.name=="Bank B")){
