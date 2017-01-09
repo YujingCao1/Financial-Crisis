@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset='utf-8'>
-<meta name="viewPort", content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Network of CDO</title>
 <script src='http://d3js.org/d3.v3.min.js'></script>
 <script src="js/vendor/jquery.js"></script>
@@ -27,8 +27,8 @@ Interactive Network of Banks and CDOs
 
 <div id="buttons">
     <form>
-        <strong>CDOs:</strong><input type="radio" name="con_discon", value="connect" id="cdo_connect">Connect
-        <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect" checked>Disconnect
+        <strong>CDOs:</strong><input type="radio" name="con_discon", value="connect" id="cdo_connect">Scenario 1
+        <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect" checked>Scenario 2
     </form>
     <p id="status"><strong>Current Status: </strong>CDOs are NOT connected</p>
 </div>
@@ -97,14 +97,15 @@ Interactive Network of Banks and CDOs
         </span></li>
     </div>    
 </div>
-<div id="reset_button">
-     <input type="button" name="reset" value="Reset" id="reset" onclick="reset();" style="background-color: rgba(26, 139, 239, 0.1);border: none; padding: 10px 20px; font-size: 14px; width: 15.5%;" />  
+<div id="reset_about">
+    <div id="reset_button">
+     <button class="button" onclick="reset();">Reset</button>  
+    </div>
+    <div id="about">
+        <button class="button" onclick="acknowledge();">Acknowledge</button>
+    </div>   
+    <div id="acknowledge"></div>
 </div>
-
-<div id="about">
-    <button class="button" onclick="acknowledge();">Acknowledge</button>
-</div>   
-<div id="acknowledge"></div>
 <div id="tooltip"></div>
 
 <script type="text/javascript">
