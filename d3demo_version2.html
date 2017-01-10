@@ -27,8 +27,10 @@ Interactive Network of Banks and CDOs
 
 <div id="buttons">
     <form>
-        <strong>CDOs:</strong><input type="radio" name="con_discon", value="connect" id="cdo_connect">Scenario 1:<br>       CDOs are owned by banks (and only banks); CDOs are not directly connected to each other.<br>
-        <input type="radio" name="con_discon", value="disconnect" id="cdo_disconnect" checked>Scenario 2: <br>CDOs can be owned by banks or other CDOs; CDOs are connected to each other.
+        <strong>CDOs:</strong> <input type="radio" name="con_discon", value="connect" id="cdo_disconnect" checked="checked" style="margin-left: 0.1%;">Scenario 1:<br> 
+        &nbsp; &#160; &#160; CDOs are owned by banks (and only banks); CDOs are not directly connected to each other.<br>
+        &#160; &#160; &#160;<input type="radio" name="con_discon", value="disconnect" id="cdo_connect" style="margin-left: 1.4%">Scenario 2: <br> 
+        &nbsp; &#160; &#160; CDOs can be owned by banks or other CDOs; CDOs are connected to each other.
     </form>
     <p id="status"><strong>Current Status: </strong>CDOs are NOT connected</p>
 </div>
@@ -99,7 +101,7 @@ Interactive Network of Banks and CDOs
 </div>
 <div id="reset_about">
     <div id="reset_button">
-     <button class="button" onclick="reset();">Reset</button>  
+         <button class="button" onclick="reset();">Reset</button>  
     </div>
     <div id="about">
         <button class="button" onclick="acknowledge();">Acknowledge</button>
@@ -348,8 +350,6 @@ var status=document.getElementById("status");
 var cdo_connect=document.getElementById("cdo_connect").checked;
 var cdo_disconnect=document.getElementById("cdo_disconnect").checked;
 
-console.log(cdo_disconnect);
-console.log(cdo_connect);
 
 d3.selectAll("input[id=cdo_connect]").on("change",function(){
     cdo_connect=true;
@@ -401,8 +401,8 @@ function initalSet(){
         dataset.link.splice(dataset.link.length-2,2);
         adding=0;
         document.getElementById("status").innerHTML="<strong>"+"Current Status: "+"</strong>"+"CDOs are NOT connected";
-        cdo_disconnect=true;
-        cdo_connect=false;
+        cdo_disconnect="checked";
+        cdo_connect="";
         dataset.nodes[4].size=1;
         dataset.nodes[6].size=1;
         dataset.nodes[7].size=2;
@@ -1219,7 +1219,8 @@ function reset(){
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('path').value="";
     document.getElementById('path_bank').value="";
-    document.getElementById('reset').value="Reset";
+
+    initalSet();
 }
 
             </script>

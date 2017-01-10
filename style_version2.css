@@ -130,9 +130,10 @@ p{
 	width: 40%;
 }
 #container{
+	margin-top: 5%;
 	margin-left: 42%;
 	position: absolute;
-	transform: translate(1%,-2%);
+	transform: translate(5%,-2%);
 }
 
 #buttons{
