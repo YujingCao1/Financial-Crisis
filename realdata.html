@@ -117,8 +117,8 @@
 	var svg=d3.select("div#container").append("svg")
 		.attr("width",width*1.1)
 		.attr("height",height)
-        .attr('viewBox','0 0 '+width*1.8+' '+height*1.2)
-        .attr('perserveAspectRatio','xMidYMid meet')
+        .attr('viewBox','0 0 '+width*2.3+' '+height*1.5)
+        .attr('perserveAspectRatio','xMaxYMid meet')
 		.append("g")
         .attr("transform","translate("+margin.left+","+margin.right+")")
         .call(zoom);
@@ -557,9 +557,10 @@ function crossOwnership(){
                         }
                     });
                     
-                    if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
-                        nodeHightlight.push(d)
-                    }
+                    // if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
+                    //     nodeHightlight.push(d)
+                    // }
+                    nodeHightlight.push(d);
 
                     node.transition()
                         .delay(100)
@@ -625,9 +626,10 @@ function crossOwnership(){
                     })
                  });
 
-                 if (connected3.length!=0&&!connected3.includes(d)){
-                    connected3.push(d);
-                 }
+                 // if (connected3.length!=0&&!connected3.includes(d)){
+                 //    connected3.push(d);
+                 // }
+                 connected3.push(d);
 
 
                  node.transition()
@@ -708,9 +710,10 @@ function crossOwnership(){
                 })
              });
 
-             if(connected5.length!=0&&(!connected5.includes(d))){
-                connected5.push(d);
-             }
+             // if(connected5.length!=0&&(!connected5.includes(d))){
+             //    connected5.push(d);
+             // }
+             connected5.push(d);
 
             // 6th order neighbors and 3 CDO links
                 if (connected5.length!=0){
