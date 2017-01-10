@@ -297,10 +297,11 @@ function update(thresh) {
 }
 
 var orderingNeighbor=document.getElementById('undirect');
-    
 
 function neighboringNodes(d){
     var ordering=parseInt(orderingNeighbor.value,10);
+
+    // 1st order neighbors
     if (ordering==0){
      if (toggle==0){
             var neighborNames=[];
@@ -366,6 +367,8 @@ function neighboringNodes(d){
              toggle=0;
 		}
     }
+
+    // 2nd order neighbors
     if (ordering==1){
      if (toggle==0){
             var neighborNames=[];
@@ -405,6 +408,7 @@ function neighboringNodes(d){
                  neighbor2NamesList=neighbor2Names.join("<br />");
                  
                  neighborNames.push(d);
+                 neighbor1.push(d);
 
                  var tooltipDiv = document.getElementById('tooltip');
                      tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
@@ -423,14 +427,20 @@ function neighboringNodes(d){
                          .style("opacity",function(o){
                              return neighbor1.includes(o) | neighbor2.includes(o) |o==d? 0.9:0.1;
                             });
+
                      link.transition()
                          .delay(150)
                          .duration(1000)
                          .style("stroke",function(o){
-                                 return neighborNames.includes(o.source) && neighborNames.includes(o.target)? "#F50F0F":"#999999";
-                                 })
+                                if ( (d==o.source && neighbor1.includes(o.target)) | (d==o.target && neighbor1.includes(o.source))){
+                                    return "rgb(245, 15, 15,1)";
+                                } 
+                                if ((neighbor2.includes(o.source) && neighbor1.includes(o.target)) | (neighbor2.includes(o.target) && neighbor1.includes(o.source))){
+                                    return "rgb(79, 185, 97,1)";
+                                }
+                            })
                          .style("opacity", function(o){
-                             return neighborNames.includes(o.source) && neighborNames.includes(o.target)? 1:0.1;
+                             return neighborNames.includes(o.target) && neighborNames.includes(o.source)? 1:0.1;
                              });
 
                     container.selectAll(".node").select("text").transition()
@@ -444,6 +454,137 @@ function neighboringNodes(d){
                          .duration(1000)
                             .attr("r", function(o){
                                 return neighbor1.includes(o) | neighbor2.includes(o)? o.size*6:o.size*4;
+                            });
+                    toggle=1;
+        }else{
+             var tooltipDiv=document.getElementById('tooltip');
+                  tooltipDiv.style.display="none";
+            node.transition().delay(150).duration(1000).style("opacity",0.9);
+            link.transition().delay(150).duration(1000).style("opacity",1)
+                .style("stroke","#999999")
+                .style("stroke-width","2px");
+             container.selectAll(".node").select("circle").transition()
+                        .delay(150)
+                        .duration(1000)
+                        .attr("r", function(o){
+                            return o.size*4;
+                        });
+             container.selectAll(".node").select("text").transition()
+                        .delay(150)
+                        .duration(1000)
+                        .style("font-size","15px");
+             toggle=0;
+        }
+    }
+
+    // 3rd Order Neighbors
+    if (ordering==2){
+     if (toggle==0){
+            var neighborNames=[];
+            var neighbor1=[];
+            var neighbor2=[];
+            var neighbor3=[];
+            var neighbor1Names=[];
+            var neighbor2Names=[];
+            var neighbor3Names=[];
+
+                node.each(function(o){
+                 if (isConnected(d,o)){
+                     if (d.name!=o.name){
+                         neighbor1.push(o);
+                         neighbor1Names.push(o.name);
+                         }
+                     }
+                });
+
+                node.each(function(o){
+                    neighbor1.forEach(function(e){
+                        if (isConnected(o,e)&&o.name!=d.name&&o.name!=e.name){
+                                if (!neighbor1.includes(o)){
+                                     neighbor2.push(o);
+                                     neighbor2Names.push(o.name);
+                                }
+                               
+                        }
+                    })
+                });
+
+                node.each(function(o){
+                    neighbor2.forEach(function(e){
+                        if(isConnected(o,e)&&o.name!=d.name&&o.name!=e.name){
+                                neighborNames.push(o);
+                                neighborNames.push(e);
+                                if (!neighbor2.includes(o)&&!neighbor1.includes(o)&&!neighbor3.includes(o)){
+                                    neighbor3.push(o);
+                                    neighbor3Names.push(o.name);
+                                }
+                        }
+                    })
+                })
+
+
+
+                 var neighborNamesList=[];
+                 neighborNames.forEach(function(o){
+                         neighborNamesList.push(o.name);
+                 })
+                 neighbor1NamesList=neighbor1Names.join("<br />");
+                 neighbor2NamesList=neighbor2Names.join("<br />");
+                 neighbor3NamesList=neighbor3Names.join("<br />");
+                 
+                
+                 neighborNames.push(d);
+
+                 console.log(neighborNames);
+
+                 var tooltipDiv = document.getElementById('tooltip');
+                     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
+                                            "<strong>"+"1st Order Connections (Direct Connections): "+"</strong>"+"<br />"+
+                                            "Size: "+ neighbor1Names.length + "<br />"+
+                                            neighbor1NamesList+"<br />"+"<strong>"+"Undirected Connections: "+"</strong>"+"<br />"+
+                                            "<strong>"+"2nd Order Connections: "+"</strong>"+"<br />"+ 
+                                            "Size: "+ neighbor2Names.length + "<br />"+neighbor2NamesList+"<br />"+
+                                             "<strong>"+"3rd Order Connections: "+"</strong>"+"<br />"+ 
+                                            "Size: "+ neighbor3Names.length + "<br />"+neighbor3NamesList+"<br />" ;
+
+                     tooltipDiv.style.display = "block";
+
+                     d=d3.select(this).node().__data__;
+                     node.transition()
+                         .delay(150)
+                         .duration(1000)
+                         .style("opacity",function(o){
+                             return neighbor1.includes(o) | neighbor2.includes(o) | neighbor3.includes(o) | o==d? 0.9:0.1;
+                            });
+                     link.transition()
+                         .delay(150)
+                         .duration(1000)
+                         .style("stroke",function(o){
+                                  if ( (d==o.source && neighbor1.includes(o.target)) | (d==o.target && neighbor1.includes(o.source))){
+                                    return "#F50F0F";
+                                } 
+                                if ((neighbor2.includes(o.source) && neighbor1.includes(o.target)) | (neighbor2.includes(o.target) && neighbor1.includes(o.source))){
+                                    return "#4FB961";
+                                }
+                                if ((neighbor2.includes(o.source) && neighbor3.includes(o.target)) | (neighbor2.includes(o.target) && neighbor3.includes(o.source))){
+                                    return "#CC339E";
+                                }
+                                 })
+                         .style("opacity", function(o){
+                             return neighborNames.includes(o.target) && neighborNames.includes(o.source)? 1:0.1;
+                             });
+
+                    container.selectAll(".node").select("text").transition()
+                         .delay(150)
+                         .duration(1000)
+                        .style("font-size",function(o){
+                            return neighbor1.includes(o) | neighbor2.includes(o) |neighbor3.includes(o)? "25px":"15px";
+                        });
+                    container.selectAll(".node").select("circle").transition()
+                         .delay(150)
+                         .duration(1000)
+                            .attr("r", function(o){
+                                return neighbor1.includes(o) | neighbor2.includes(o) |neighbor3.includes(o)? o.size*6:o.size*4;
                             });
                     toggle=1;
         }else{
@@ -1045,6 +1186,7 @@ function reset(){
     $('select').each(function() { this.selectedIndex = 0});
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('reset').value="Reset";
+    document.getElementById('tooltip').style.display="none";
 }
 var acknowledge_1=0;
 function acknowledge(){
