@@ -1,5 +1,6 @@
 body{
 	position: relative;
+	font-size: 18px;
 }
 #header{
 	text-align: center;
@@ -35,14 +36,14 @@ body{
 	border:solid white;
 	border-width:0.7px;
 	display: none;
-	font-size: 100%;
-	padding: 20px;
+	font-size: 85%;
+	padding: 0.5%;
 	text-align: left;
-	top: 13%;
+	top: 28%;
 	right: 0.4%;
-	position: fixed;
+	position: absolute;
 	height:auto;
-	line-height: 1.5;
+	line-height: 1;
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace;
 	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
@@ -51,11 +52,11 @@ body{
 #container{
 	position: absolute;
 	margin-top: 0.1%;
-	margin-left: 40%;
+	margin-left: 35%;
 }
 
 #introduction{
-	width: 40%;
+	width: 30%;
 	margin-top: 1%;
 	margin-left: 1%;
 }
@@ -122,12 +123,6 @@ input[type=range]:focus::-moz-range-track{
 input{
 	text-align: center;
 }
-/*select{
-	border-radius:7px;
-	border-width:2.5px;
-	border-color:rgba(63, 127, 191, 0.9);
-	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}*/
 
 #cdo{
 	width: 30%;
@@ -177,25 +172,28 @@ input{
 	top:107%;
 	left: 1%;
 	height: 10%;
+	width: 10%;
 	position: absolute;
 	text-align:center;
 	display: inline-block;
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace;
 	cursor: pointer;
+	font-size: 90%;
 }
 text{
 	font-size: 25px;
 }
 
-#about{
-	top: 240%;
+#acknowledgement_button{
+	top: 120%;
 	left: 1%;
+	width: 10%;
 	position: absolute;
 	float: left;
 }
 #acknowledge{
-	top: 250%;
+	top: 126%;
 	margin-left: 1%;
 	position: absolute;
 	float: left;
@@ -203,9 +201,8 @@ text{
 	border-width:0.7px;
 	display: none;
 	font-size: 110%;
-	padding: 20px;
 	text-align: left;
-	width: 100%;
+	width: 30%;
 	height: auto;
 	font-size: 14px;
 }
