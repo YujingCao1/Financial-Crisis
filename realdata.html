@@ -24,13 +24,16 @@
     </div>
     
 	<div id="introduction">
-         <li id="question1"><span>Click on a bank to see how many CDOs it owns. The ownership of a CDO by a bank is denoted by a gray link between two circles or nodes.</span></li><br>
+         <li id="question1"><span>
+         <div style="display: inline-block;vertical-align: center;">Click on a bank to see how many CDOs it owns via</div>
          <select id="undirect" name="undirect_neighbors">
                 <option selected value=-1>Select The Number of Inter-mediating Nodes</option>
                 <option value=0>0</option>
                 <option value=1>1</option> 
                 <option value=2>2</option>
-        </select> 
+        </select>
+        <div style="display: inline-block;vertical-align: center;">  inter-mediating nodes.</div>
+         </span></li><br>
         <li id="question2"><span>If more than X percent of a bank's CDOs fail, the bank will fail.</span></li>
          <p><strong>Define X:</strong></p>
 	     <input id="sliderbar" type="range" min="0" max="100" step="1"/>
@@ -315,7 +318,7 @@ function neighboringNodes(d){
 				 var neighborNamesList=neighborNames.join("<br />");
 				 var tooltipDiv = document.getElementById('tooltip');
 				     tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
-					 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connections: "+"</strong>"+"<br />"+neighborNamesList;
+					 "Size: "+ d.size + "<br />"+"<strong>"+"Direct Connection (1st Order Connections): "+"</strong>"+"<br />"+neighborNamesList;
 				     tooltipDiv.style.display = "block";
 				     d=d3.select(this).node().__data__;
                      node.transition()
@@ -412,9 +415,9 @@ function neighboringNodes(d){
 
                  var tooltipDiv = document.getElementById('tooltip');
                      tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
-                                            "<strong>"+"1st Order Connections (Direct Connections): "+"</strong>"+"<br />"+
+                                            "<strong>"+"Direct Connections (1st Order Connections): "+"</strong>"+"<br />"+
                                             "Size: "+ neighbor1Names.length + "<br />"+
-                                            neighbor1NamesList+"<br />"+"<strong>"+"Undirected Connections: "+"</strong>"+"<br />"+
+                                            neighbor1NamesList+"<br />"+"<strong>"+"Indirect Connections: "+"</strong>"+"<br />"+
                                             "<strong>"+"2nd Order Connections: "+"</strong>"+"<br />"+ 
                                              "Size: "+ neighbor2Names.length + "<br />"+neighbor2NamesList;
 
@@ -542,9 +545,9 @@ function neighboringNodes(d){
 
                  var tooltipDiv = document.getElementById('tooltip');
                      tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
-                                            "<strong>"+"1st Order Connections (Direct Connections): "+"</strong>"+"<br />"+
+                                            "<strong>"+"Direct Connections (1st Order Connections): "+"</strong>"+"<br />"+
                                             "Size: "+ neighbor1Names.length + "<br />"+
-                                            neighbor1NamesList+"<br />"+"<strong>"+"Undirected Connections: "+"</strong>"+"<br />"+
+                                            neighbor1NamesList+"<br />"+"<strong>"+"Indirect Connections: "+"</strong>"+"<br />"+
                                             "<strong>"+"2nd Order Connections: "+"</strong>"+"<br />"+ 
                                             "Size: "+ neighbor2Names.length + "<br />"+neighbor2NamesList+"<br />"+
                                              "<strong>"+"3rd Order Connections: "+"</strong>"+"<br />"+ 
