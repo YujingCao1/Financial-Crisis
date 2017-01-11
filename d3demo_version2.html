@@ -27,7 +27,8 @@ Interactive Network of Banks and CDOs
 
 <div id="buttons">
     <form>
-        <strong>CDOs:</strong> <input type="radio" name="con_discon", value="connect" id="cdo_disconnect" checked="checked" style="margin-left: 0.1%;">Scenario 1:<br> 
+        <strong>CDOs:</strong>
+         <input type="radio" name="con_discon", value="connect" id="cdo_disconnect" checked="checked" style="margin-left: 0.1%;">Scenario 1:<br> 
         &nbsp; &#160; &#160; CDOs are owned by banks (and only banks); CDOs are not directly connected to each other.<br>
         &#160; &#160; &#160;<input type="radio" name="con_discon", value="disconnect" id="cdo_connect" style="margin-left: 1.4%">Scenario 2: <br> 
         &nbsp; &#160; &#160; CDOs can be owned by banks or other CDOs; CDOs are connected to each other.
@@ -1222,6 +1223,10 @@ function reset(){
 
     initalSet();
 }
+    // go back to default radio button
+    $('#reset_button').click(function(){
+        $('input[name="con_discon"]:nth-of-type(1)').prop('checked',true);
+    })
 
             </script>
     </body>
