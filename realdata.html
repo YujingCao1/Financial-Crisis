@@ -440,8 +440,11 @@ function neighboringNodes(d){
                                 }
                             })
                          .style("opacity", function(o){
-                             return neighborNames.includes(o.target) && neighborNames.includes(o.source)? 1:0.1;
-                             });
+                            return ( (d==o.source && neighbor1.includes(o.target)) | (d==o.target && neighbor1.includes(o.source))) |  ((neighbor2.includes(o.source) && neighbor1.includes(o.target)) | (neighbor2.includes(o.target) && neighbor1.includes(o.source))) ? 1: 0.1;
+                         })
+                         // .style("opacity", function(o){
+                         //     return neighborNames.includes(o.target) && neighborNames.includes(o.source)? 1:0.1;
+                         //     });
 
                     container.selectAll(".node").select("text").transition()
                          .delay(150)
@@ -511,7 +514,7 @@ function neighboringNodes(d){
 
                 node.each(function(o){
                     neighbor2.forEach(function(e){
-                        if(isConnected(o,e)&&o.name!=d.name&&o.name!=e.name){
+                        if(isConnected(o,e)){
                                 neighborNames.push(o);
                                 neighborNames.push(e);
                                 if (!neighbor2.includes(o)&&!neighbor1.includes(o)&&!neighbor3.includes(o)){
@@ -523,11 +526,6 @@ function neighboringNodes(d){
                 })
 
 
-
-                 var neighborNamesList=[];
-                 neighborNames.forEach(function(o){
-                         neighborNamesList.push(o.name);
-                 })
                  neighbor1NamesList=neighbor1Names.join("<br />");
                  neighbor2NamesList=neighbor2Names.join("<br />");
                  neighbor3NamesList=neighbor3Names.join("<br />");
@@ -535,7 +533,12 @@ function neighboringNodes(d){
                 
                  neighborNames.push(d);
 
-                 console.log(neighborNames);
+                var neighborNamesList=[];
+                 neighborNames.forEach(function(o){
+                         neighborNamesList.push(o.name);
+                 })
+
+                 console.log(neighborNamesList);
 
                  var tooltipDiv = document.getElementById('tooltip');
                      tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
@@ -571,7 +574,7 @@ function neighboringNodes(d){
                                 }
                                  })
                          .style("opacity", function(o){
-                             return neighborNames.includes(o.target) && neighborNames.includes(o.source)? 1:0.1;
+                             return ( (d==o.source && neighbor1.includes(o.target)) | (d==o.target && neighbor1.includes(o.source))) | ((neighbor2.includes(o.source) && neighbor1.includes(o.target)) | (neighbor2.includes(o.target) && neighbor1.includes(o.source))) | ((neighbor2.includes(o.source) && neighbor3.includes(o.target)) | (neighbor2.includes(o.target) && neighbor3.includes(o.source)))? 1:0.1;
                              });
 
                     container.selectAll(".node").select("text").transition()
@@ -1188,6 +1191,7 @@ function reset(){
     document.getElementById('reset').value="Reset";
     document.getElementById('tooltip').style.display="none";
 }
+
 var acknowledge_1=0;
 function acknowledge(){
     if (acknowledge_1==0){
