@@ -105,7 +105,7 @@ Interactive Network of Banks and CDOs
          <button class="button" onclick="reset();">Reset</button>  
     </div>
     <div id="about">
-        <button class="button" onclick="acknowledge();">Acknowledge</button>
+        <button class="button" onclick="acknowledge();">Acknowledgements</button>
     </div>   
     <div id="acknowledge"></div>
 </div>
@@ -449,17 +449,12 @@ function shortestPath(){
           }else{
             highlightedPath=["Bank A","CDO 2","Bank B"];
           }
-            // node.transition()
-            //     .style("opacity",function(o){
-            //         return highlightedPath.includes(o.name)? 0.9:0.1;
-            //         });
+
             link.transition()
                 .style("stroke",function(o){
                         return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
                      })
-                // .style("opacity", function(o){
-                //     return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
-                //     });
+
             document.getElementById('path').value=1;
             document.getElementById('path_bank').value=0;
         }
@@ -468,32 +463,22 @@ function shortestPath(){
           var highlightedPath=new Array();
             if (adding==1){
                 highlightedPath=["Bank A","CDO 1","CDO 4","Bank C"]; 
-                //  node.transition()
-                // .style("opacity",function(o){
-                //     return highlightedPath.includes(o.name)? 0.9:0.1;
-                //     });
+
             link.transition()
                 .style("stroke",function(o){
                         return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
                      })
-                // .style("opacity", function(o){
-                //     return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
-                //     });
+
             document.getElementById('path').value=2;
             document.getElementById('path_bank').value=0;
             }else{
                 highlightedPath=["Bank A","CDO 2","CDO 4","Bank C","Bank B"];
-                //  node.transition()
-                // .style("opacity",function(o){
-                //     return highlightedPath.includes(o.name)? 0.9:0.1;
-                //     });
+
             link.transition()
                 .style("stroke",function(o){
                         return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
                      })
-                // .style("opacity", function(o){
-                //     return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
-                //     });
+ 
             document.getElementById('path').value=2;
             document.getElementById('path_bank').value=1;
             }
@@ -507,17 +492,12 @@ function shortestPath(){
             }else{
                 highlightedPath=["Bank B","CDO 4","Bank C"];
             }
-            // node.transition()
-            //     .style("opacity",function(o){
-            //         return highlightedPath.includes(o.name)? 0.9:0.1;
-            //         });
+
             link.transition()
                 .style("stroke",function(o){
                         return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? "#F50F0F":"#999999";
                      })
-                // .style("opacity", function(o){
-                //     return highlightedPath.includes(o.source.name) && highlightedPath.includes(o.target.name)? 1:0.1;
-                //     });
+
            document.getElementById('path').value=1;
            document.getElementById('path_bank').value=0
         }
@@ -601,9 +581,7 @@ function crossOwnership(){
                         }
                     });
                     
-                    // if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
-                    //     nodeHightlight.push(d)
-                    // }
+
                     nodeHightlight.push(d)
 
                     node.transition()
@@ -670,9 +648,7 @@ function crossOwnership(){
                     })
                  });
 
-                 // if (connected3.length!=0&&!connected3.includes(d)){
-                 //    connected3.push(d);
-                 // }
+
                  connected3.push(d);
 
                  node.transition()
@@ -1079,7 +1055,7 @@ var acknowledge_1=0;
 function acknowledge(){
     if (acknowledge_1==0){
         var acknowledgement=document.getElementById('acknowledge')
-        acknowledgement.innerHTML="Instructions and relevant economics concepts are provided by "+"<a href=http:"+"//www.grinnell.edu/users/brouhlek>"+"Keith R Brouhle</a>"+", this visualization is implemented by Yujing Cao "+"<a href=http:"+"//dasil.grinnell.edu/>"+"DASIL</a>";
+        acknowledgement.innerHTML="Instructions and relevant economics concepts are provided by "+"<a href=http:"+"//www.grinnell.edu/users/brouhlek>"+"Keith R Brouhle</a>"+", this visualization is implemented by Yujing Cao at "+"<a href=http:"+"//dasil.grinnell.edu/>"+"DASIL</a>";
         acknowledgement.style.display = "block";
         acknowledge_1=1;
     }else{
