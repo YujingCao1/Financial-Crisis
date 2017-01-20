@@ -19,17 +19,14 @@
 <body>
 	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
     <div id="container"></div>
-    <div id="reset_button">
-        <input type="button" name="reset" value="Reset" id="reset"/> 
-    </div>
     <div id="cluster">
         <li><span>
            <div style="display: inline-block;">Choose a cluster</div>
         <form>
-            <input type="radio" name="Three_Cluster", value="1" id="All_Cluster" checked="checked">All
             <input type="radio" name="Three_Cluster", value="1" id="First_Cluster">1
             <input type="radio" name="Three_Cluster", value="2" id="Second_Cluster">2
-            <input type="radio" name="Three_Cluster", value="3" id="Third_Cluster">3<br> 
+            <input type="radio" name="Three_Cluster", value="3" id="Third_Cluster">3
+            <input type="radio" name="Three_Cluster", value="0" id="All_Cluster" checked="checked">All<br>
 
         </form></span>
         </li>
@@ -53,6 +50,9 @@
          
     </div>
 	<div id="tooltip"></div>
+    <div id="reset_button">
+        <input type="button" name="reset" value="Reset" id="reset"/> 
+    </div>
     <div id="about">
         <button class="button" id="acknowledgement_button">Acknowledgements</button>
     </div>
@@ -265,6 +265,10 @@ var legend = svg.selectAll('.legend')
     var cluster_two=document.getElementById('Second_Cluster').checked;
     var cluster_three=document.getElementById('Third_Cluster').checked;
 
+    var intro_div=document.getElementById('introduction');
+    var cluster_div=document.getElementById('cluster');
+
+
     d3.selectAll("input[id=All_Cluster]").on("change",function(){
         cluster_all=true;
         cluster_one=false;
@@ -410,6 +414,10 @@ function neighboringNodes(d){
                                 return neighboring(o,d)|neighboring(d,o)? o.size*6:o.size*4;
                             });
 					toggle=1;
+                    intro_div.style.display="none";
+                    cluster_div.style.display="none";
+                    resetbutton.style.display="none";
+                    acknowledgement_button.style.display="none"
 		}else{
 		     var tooltipDiv=document.getElementById('tooltip');
 			      tooltipDiv.style.display="none";
@@ -453,6 +461,10 @@ function neighboringNodes(d){
                         .duration(1000)
                         .style("font-size","15px");
              toggle=0;
+            intro_div.style.display="block";
+            cluster_div.style.display="block";
+            resetbutton.style.display="block";
+            acknowledgement_button.style.display="block"
 		}
     }
 
@@ -547,6 +559,10 @@ function neighboringNodes(d){
                                 return neighbor1.includes(o) | neighbor2.includes(o)? o.size*6:o.size*4;
                             });
                     toggle=1;
+                    intro_div.style.display="none";
+                    cluster_div.style.display="none";
+                    resetbutton.style.display="none";
+                    acknowledgement_button.style.display="none"
         }else{
              var tooltipDiv=document.getElementById('tooltip');
                   tooltipDiv.style.display="none";
@@ -589,6 +605,10 @@ function neighboringNodes(d){
                         .duration(1000)
                         .style("font-size","15px");
              toggle=0;
+            intro_div.style.display="block";
+            cluster_div.style.display="block";
+            resetbutton.style.display="block";
+            acknowledgement_button.style.display="block"
         }
     }
 
@@ -700,6 +720,10 @@ function neighboringNodes(d){
                                 return neighbor1.includes(o) | neighbor2.includes(o) |neighbor3.includes(o)? o.size*6:o.size*4;
                             });
                     toggle=1;
+                    intro_div.style.display="none";
+                    cluster_div.style.display="none";
+                    resetbutton.style.display="none";
+                    acknowledgement_button.style.display="none"
         }else{
              var tooltipDiv=document.getElementById('tooltip');
                   tooltipDiv.style.display="none";
@@ -742,6 +766,10 @@ function neighboringNodes(d){
                         .duration(1000)
                         .style("font-size","15px");
              toggle=0;
+            intro_div.style.display="block";
+            cluster_div.style.display="block";
+            resetbutton.style.display="block";
+            acknowledgement_button.style.display="block"
         }
     }
 }
@@ -1100,7 +1128,7 @@ function reset(){
     document.getElementById('tooltip').style.display="none";
 
      $('#reset_button').click(function(){
-        $('input[name="Three_Cluster"]:nth-of-type(1)').prop('checked',true);
+        $('input[name="Three_Cluster"]:nth-of-type(4)').prop('checked',true);
     })
 
 }

@@ -39,8 +39,8 @@ body{
 	font-size: 85%;
 	padding: 0.5%;
 	text-align: left;
-	top: 28%;
-	right: 0.4%;
+	top: 100%;
+	left:1%;
 	position: absolute;
 	height:auto;
 	line-height: 1;
@@ -191,7 +191,17 @@ text{
 	top: 120%;
 	left: 1%;
 	position: absolute;
-	float: left;
+	height: 10%;
+	width:190px;
+	position: absolute;
+	text-align:center;
+	display: inline-block;
+	font-family: 'Source Serif Pro', serif;
+	font-family: 'Source Code Pro', monospace;
+	cursor: pointer;
+	font-size: 16px;
+	background-color: rgba(26, 139, 239, 0.1);
+	border: none;
 }
 
 #acknowledge{
@@ -205,14 +215,14 @@ text{
 	font-size: 110%;
 	text-align: left;
 	width: 30%;
-	height: auto;
+	height: 10%;
 	font-size: 14px;
 }
 .button{
 	background-color: rgba(26, 139, 239, 0.1);
 	border: none;
 	color: black;
-	padding: 10px 25px;
+	padding: 10px 10px;
 	text-align: center;
 	display: inline-block;
 	font-size: 16px;
