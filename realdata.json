@@ -138,7 +138,10 @@
     "title": "Mizuho.International...Mizuho.Securities.USA",
     "group": 1,
     "radius":3,
-    "value":13
+    "value":13,
+    "x":1300,
+    "y":1100,
+    "fixed":true
   },
   {
     "name": "Wachovia.Securities",
@@ -178,7 +181,10 @@
     "title": "Fortis.Securities",
     "group": 1,
     "radius":6,
-    "value":17
+    "value":17,
+    "x":100,
+    "y":1000,
+    "fixed":true
   },
   {
     "name": "Merrill.Lynch...Terwin.Capital",
@@ -208,7 +214,10 @@
     "title": "Banc.of.America.Securities",
     "group": 1,
     "radius":9,
-    "value":20
+    "value":20,
+    "x":700,
+    "y":1050,
+    "fixed":true
   },
   {
     "name": "Bear.Stearns",
@@ -238,7 +247,10 @@
     "title": "Banc.of.America.Securities...SunTrust.Robinson.Humphrey",
     "group": 1,
     "radius":3,
-    "value":23
+    "value":23,
+    "x":1100,
+    "y":1000,
+    "fixed":true
   },
   {
     "name": "TABS.2007.7",
@@ -578,7 +590,10 @@
     "title": "Delphinus.CDO.2007.1",
     "group": 2,
     "radius":6,
-    "value":57
+    "value":57,
+    "x":1200,
+    "y":1100,
+    "fixed":true
   },
   {
     "name": "Broderick.CDO.2",
@@ -763,7 +778,10 @@
     "shape": "triangle",
     "title": "Kent.Funding.II",
     "group": 2,
-    "value":76
+    "value":76,
+    "x":600,
+    "y":1100,
+    "fixed":true
   },
   {
     "name": "Silver.Marlin.ABS.CDO.I",
@@ -799,7 +817,10 @@
     "shape": "triangle",
     "title": "Nordic.Valley.2007.1.CDO",
     "group": 2,
-    "value":80
+    "value":80,
+    "x":900,
+    "y":1100,
+    "fixed":true
   },
   {
     "name": "Hartshorne.CDO.I",
@@ -826,7 +847,10 @@
     "shape": "triangle",
     "title": "Fort.Duquesne.CDO.2006.1",
     "group": 2,
-    "value":83
+    "value":83,
+    "x":800,
+    "y":1000,
+    "fixed":true
   },
   {
     "name": "Neptune.CDO.IV",
@@ -907,7 +931,10 @@
     "shape": "triangle",
     "title": "Ansley.Park.ABS.CDO",
     "group": 2,
-    "value":92
+    "value":92,
+    "x":1000,
+    "y":980,
+    "fixed":true
   },
   {
     "name": "Independence.VII.CDO",
@@ -1060,7 +1087,10 @@
     "shape": "triangle",
     "title": "Grand.Avenue.CDO.I",
     "group": 2,
-    "value":109
+    "value":109,
+    "x":500,
+    "y":1000,
+    "fixed":true
   },
   {
     "name": "South.Coast.Funding.VII",
