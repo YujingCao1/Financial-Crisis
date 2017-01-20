@@ -55,6 +55,11 @@ body{
 	margin-left: 35%;
 }
 
+#cluster{
+	width: 30%;
+	margin-top: 1%;
+	margin-left: 1%;
+}
 #introduction{
 	width: 30%;
 	margin-top: 1%;
@@ -142,11 +147,6 @@ input{
 	text-align: center;
 }
 
-#options{
-	width:100%;
-	height:auto;
-	margin-bottom: 10px;
-}
 
 #bank{
 	height: 100%;
@@ -172,14 +172,16 @@ input{
 	top:107%;
 	left: 1%;
 	height: 10%;
-	width: 10%;
+	width:190px;
 	position: absolute;
 	text-align:center;
 	display: inline-block;
 	font-family: 'Source Serif Pro', serif;
 	font-family: 'Source Code Pro', monospace;
 	cursor: pointer;
-	font-size: 90%;
+	font-size: 16px;
+	background-color: rgba(26, 139, 239, 0.1);
+	border: none;
 }
 text{
 	font-size: 25px;
@@ -188,12 +190,12 @@ text{
 #acknowledgement_button{
 	top: 120%;
 	left: 1%;
-	width: 10%;
 	position: absolute;
 	float: left;
 }
+
 #acknowledge{
-	top: 126%;
+	top: 133%;
 	margin-left: 1%;
 	position: absolute;
 	float: left;

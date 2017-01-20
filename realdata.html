@@ -20,9 +20,20 @@
 	<div id="header"><h2>Visualization of Banks and CDOs</h2></div>
     <div id="container"></div>
     <div id="reset_button">
-        <input type="button" name="reset" value="Reset" id="reset" style="background-color: rgba(26, 139, 239, 0.1);border: none; width: 10%; font-size: 14px;"/> 
+        <input type="button" name="reset" value="Reset" id="reset"/> 
     </div>
-    
+    <div id="cluster">
+        <li><span>
+           <div style="display: inline-block;">Choose a cluster</div>
+        <form>
+            <input type="radio" name="Three_Cluster", value="1" id="All_Cluster" checked="checked">All
+            <input type="radio" name="Three_Cluster", value="1" id="First_Cluster">1
+            <input type="radio" name="Three_Cluster", value="2" id="Second_Cluster">2
+            <input type="radio" name="Three_Cluster", value="3" id="Third_Cluster">3<br> 
+
+        </form></span>
+        </li>
+    </div>
 	<div id="introduction">
          <li id="question1"><span>
          <div style="display: inline-block;vertical-align: center;">Click on a bank to see how many CDOs it owns via</div>
@@ -32,7 +43,7 @@
                 <option value=1>1</option> 
                 <option value=2>2</option>
         </select>
-        <div style="display: inline-block;vertical-align: center;">  inter-mediating nodes.</div>
+        <div style="display: inline-block;vertical-align: center;"> inter-mediating nodes.</div>
          </span></li><br>
         <li id="question2"><span>If more than X percent of a bank's CDOs fail, the bank will fail.</span></li>
          <p><strong>Define X:</strong></p>
@@ -40,24 +51,10 @@
 	     <span id="range">0 %</span><br><br>
 	     <select id="cdo"></select><br><br>
          
-         <div id="options">
-             <li id="question3"><span id="span1">
-             <div style="display: inline-block;vertical-align: center;">Bank(s) related to</div>
-             <select id="bank" name="Bank_explore"></select>
-             <div style="display: inline-block;vertical-align: center;">within</div>
-             <select id="cdoOwnership" name="CDO_Ownership">
-                <option selected value=-1>Select The Number of CDO Links</option>
-                <option value=1>1</option>
-                <option value=2>2</option> 
-                <option value=3>3</option>
-             </select> 
-             <div style="display: inline-block;vertical-align: center;">CDO links</div>
-             </span></li>
-         </div>
     </div>
 	<div id="tooltip"></div>
     <div id="about">
-        <button class="button" id="acknowledgement_button">Acknowledge</button>
+        <button class="button" id="acknowledgement_button">Acknowledgements</button>
     </div>
     <div id="acknowledge"></div>
 </body>
@@ -97,7 +94,7 @@
 				return d.name
 			});
 	});
-    var margin={top:-5, right:-5, bottom: -5, left: -5}
+    var margin={top:-5, right:-100, bottom: -5, left: 300}
 	var width=window.innerWidth;
 	var height=window.innerHeight;
 	var toggle=0; // check if the node is clicked
@@ -112,7 +109,7 @@
 	// Set up the force layout
 	var force=d3.layout.force()
 		.charge(-350)
-		.linkDistance(300)
+		.linkDistance(200)
 		.size([width,height])
 		.nodes(data.nodes)
 		.links(data.links);
@@ -124,10 +121,10 @@
 
 	// Append a SVG to the body of the html page. Assign this SVG as an object to svg
 	var svg=d3.select("div#container").append("svg")
-		.attr("width",width*1.1)
-		.attr("height",height)
+		.attr("width",width*0.9)
+		.attr("height",height*1.1)
         .attr('viewBox','0 0 '+width*2.3+' '+height*1.5)
-        .attr('perserveAspectRatio','xMaxYMid meet')
+        .attr('perserveAspectRatio','xMidYMid meet')
 		.append("g")
         .attr("transform","translate("+margin.left+","+margin.right+")")
         .call(zoom);
@@ -195,7 +192,7 @@ var legend = svg.selectAll('.legend')
                 .attr('class', 'legend')
                 .attr('ID', function(d) { return d.name })
                 .attr("transform", function(d,i) {
-                        return "translate(" + 60 + "," + (i+3)*50 + ")";
+                        return "translate(" + -200 + "," + (i+3)*50 + ")";
                 });
 
     legend.append("rect")
@@ -253,12 +250,6 @@ var legend = svg.selectAll('.legend')
     var cdoname=document.getElementById('cdo');
     cdoname.addEventListener("change",effectOfCdO);
 	
-    // CDO Ownership
-    var bankname=document.getElementById('bank')
-    bankname.addEventListener("change", crossOwnership);
-
-    var links=document.getElementById('cdoOwnership');
-    links.addEventListener("change", crossOwnership);
 
     // Reset button
     var resetbutton=document.getElementById('reset');
@@ -267,6 +258,75 @@ var legend = svg.selectAll('.legend')
     // Acknowledge
     var acknowledgement_button=document.getElementById('acknowledgement_button');
     acknowledgement_button.addEventListener("click",acknowledge);
+
+    // Choose cluster
+    var cluster_all=document.getElementById('All_Cluster').checked;
+    var cluster_one=document.getElementById('First_Cluster').checked;
+    var cluster_two=document.getElementById('Second_Cluster').checked;
+    var cluster_three=document.getElementById('Third_Cluster').checked;
+
+    d3.selectAll("input[id=All_Cluster]").on("change",function(){
+        cluster_all=true;
+        cluster_one=false;
+        cluster_two=false;
+        cluster_three=false;
+
+        node.style("opacity",0.9);
+        link.style("opacity",1);
+    });
+
+    var cluster1=["Clifton.CDO.I","Fortis.Securities","Stockton.CDO"]
+    d3.selectAll("input[id=First_Cluster]").on("change",function(){
+        cluster_all=false;
+        cluster_one=true;
+        cluster_two=false;
+        cluster_three=false;
+
+        node.style("opacity", function(d){
+            return cluster1.includes(d.name)?0.9:0.1;
+        })
+
+        link.style("opacity", function(d){
+            return cluster1.includes(d.source.name)?1:0.1;
+        })
+
+    })
+
+    var cluster2=["Kent.Funding.II","Grand.Avenue.CDO.I", "Ansley.Park.ABS.CDO", "Banc.of.America.Securities", "Nordic.Valley.2007.1.CDO", "Delphinus.CDO.2007.1", "Mizuho.International...Mizuho.Securities.USA", "Banc.of.America.Securities...SunTrust.Robinson.Humphrey", "Fort.Duquesne.CDO.2006.1"]
+
+    d3.selectAll("input[id=Second_Cluster]").on("change",function(){
+        cluster_all=false;
+        cluster_one=false;
+        cluster_two=true;
+        cluster_three=false;
+
+        node.style("opacity", function(d){
+            return cluster2.includes(d.name)?0.9:0.1;
+        })
+
+        link.style("opacity", function(d){
+            return cluster2.includes(d.source.name)?1:0.1;
+        })
+
+    });
+
+    d3.selectAll("input[id=Third_Cluster]").on("change",function(){
+        cluster_all=false;
+        cluster_one=false;
+        cluster_two=false;
+        cluster_three=true;
+
+        node.style("opacity", function(d){
+            return !cluster2.includes(d.name) && !cluster1.includes(d.name)?0.9:0.1;
+        })
+
+        link.style("opacity", function(d){
+            return !cluster2.includes(d.source.name) && !cluster1.includes(d.source.name)?1:0.1;
+        })
+
+    })
+
+
     // Drag and pin a node down
     var node_drag = d3.behavior.drag()
         .origin(function(d){return d;})
@@ -353,8 +413,33 @@ function neighboringNodes(d){
 		}else{
 		     var tooltipDiv=document.getElementById('tooltip');
 			      tooltipDiv.style.display="none";
-			node.transition().delay(150).duration(1000).style("opacity",0.9);
-            link.transition().delay(150).duration(1000).style("opacity",1)
+
+			node.transition().delay(150).duration(1000).style("opacity",function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster1.includes(d.name) && !cluster2.includes(d.name)? 0.9:0.1;
+                    }else{
+                        return 0.9;
+                    }
+                });
+            link.transition().delay(150).duration(1000).style("opacity", function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster2.includes(d.source.name) && !cluster1.includes(d.source.name)? 1:0.1;
+                    }else{
+                        return 1;
+                    }
+                })
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
              container.selectAll(".node").select("circle").transition()
@@ -465,8 +550,32 @@ function neighboringNodes(d){
         }else{
              var tooltipDiv=document.getElementById('tooltip');
                   tooltipDiv.style.display="none";
-            node.transition().delay(150).duration(1000).style("opacity",0.9);
-            link.transition().delay(150).duration(1000).style("opacity",1)
+            node.transition().delay(150).duration(1000).style("opacity",function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster1.includes(d.name) && !cluster2.includes(d.name)? 0.9:0.1;
+                    }else{
+                        return 0.9;
+                    }
+                });
+            link.transition().delay(150).duration(1000).style("opacity", function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster2.includes(d.source.name) && !cluster1.includes(d.source.name)? 1:0.1;
+                    }else{
+                        return 1;
+                    }
+                })
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
              container.selectAll(".node").select("circle").transition()
@@ -541,8 +650,6 @@ function neighboringNodes(d){
                          neighborNamesList.push(o.name);
                  })
 
-                 console.log(neighborNamesList);
-
                  var tooltipDiv = document.getElementById('tooltip');
                      tooltipDiv.innerHTML = "<strong>"+d.name+"</strong>"+ "<br />" + 
                                             "<strong>"+"Direct Connections (1st Order Connections): "+"</strong>"+"<br />"+
@@ -596,8 +703,32 @@ function neighboringNodes(d){
         }else{
              var tooltipDiv=document.getElementById('tooltip');
                   tooltipDiv.style.display="none";
-            node.transition().delay(150).duration(1000).style("opacity",0.9);
-            link.transition().delay(150).duration(1000).style("opacity",1)
+            node.transition().delay(150).duration(1000).style("opacity",function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.name)?0.9:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster1.includes(d.name) && !cluster2.includes(d.name)? 0.9:0.1;
+                    }else{
+                        return 0.9;
+                    }
+                });
+            link.transition().delay(150).duration(1000).style("opacity", function(d){
+                    if (cluster_one){
+                        return cluster1.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_two){
+                        return cluster2.includes(d.source.name)?1:0.1;
+                    }
+                    if (cluster_three){
+                        return !cluster2.includes(d.source.name) && !cluster1.includes(d.source.name)? 1:0.1;
+                    }else{
+                        return 1;
+                    }
+                })
                 .style("stroke","#999999")
                 .style("stroke-width","2px");
              container.selectAll(".node").select("circle").transition()
@@ -789,228 +920,8 @@ function effectOfCdO(){
             .style("opacity",function(o){
                 return nodeLeft.includes(data.nodes[o.source.index])|nodeLeft.includes(data.nodes[o.target.index])? 0.1:0.9;
             });
-            }
+        }
     }
-
-function crossOwnership(){
-     var cdoID=parseInt(links.value,10);
-     var d=data.nodes[parseInt(bankname.value,10)];
-            if (d!="undefined"){
-                if (cdoID==1){
-                    var connected=[];
-                        node.each(function(o){
-                            if (isConnected(d,o)&&o.group==2&&o!=d){
-                                connected.push(o);
-                            }
-                        } 
-                    );
-
-                    
-                    var nodeHightlight=[];
-                    node.each(function(o){
-                        for (var i=0; i<connected.length; i++){
-                            if (o.group==1&&isConnected(o,connected[i])&&o!=d){
-                                nodeHightlight.push(o);
-                                nodeHightlight.push(connected[i]);
-                            }
-                        }
-                    });
-                    
-                    // if (nodeHightlight.length!=0&&!nodeHightlight.includes(d)){
-                    //     nodeHightlight.push(d)
-                    // }
-                    nodeHightlight.push(d);
-
-                    node.transition()
-                        .delay(100)
-                        .duration(1000)
-                        .style("opacity",function(o){
-                             return nodeHightlight.includes(o)? 0.9:0.1;
-                        });
-                     
-                    link.style("opacity",function(o){
-                        return nodeHightlight.includes(o.source)&&nodeHightlight.includes(o.target)? 0.9:0.1;
-                      })
-                        .style("stroke",function(o){
-                            return nodeHightlight.includes(o.source)&&nodeHightlight.includes(o.target)? "red":"#999999";
-                        });
-        }
-        if (cdoID==2){
-                var connected=[];
-                node.each(function(o){
-                     if (isConnected(d,o)&&o.group==2){
-                          connected.push(o);
-                         }
-                     } 
-                 );
-
-                
-                 var connected1=[];
-                 node.each(function(o){
-                    connected.forEach(function(e){
-                        if (isConnected(e,o)&&o.group==1&&o!=d){
-                         connected1.push(o);
-                         connected1.push(e);
-                         }
-                       }
-                     )
-                    }
-                 );
-                 
-            
-
-                 var connected2=[];
-                 node.each(function(o){
-                    connected1.forEach(function(e){
-                        if (isConnected(e,o)&&o.group==2&&e.group==1&&(!connected2.includes(o))){
-                            connected2.push(o);
-                            connected2.push(e);
-                         }
-                       }
-                     )
-                    }
-                 );
-                 
-        
-                 var connected3=[];
-                 node.each(function(o){
-                    connected2.forEach(function(e){
-                        if(isConnected(o,e)&&e.group==2&&o.group==1&&(!connected2.includes(o))){
-                            connected3.push(o);
-                            connected3.push(e);
-                        }
-                        if (e.group==1&&(!connected3.includes(e))){
-                            connected3.push(e);
-                        }
-                    })
-                 });
-
-                 // if (connected3.length!=0&&!connected3.includes(d)){
-                 //    connected3.push(d);
-                 // }
-                 connected3.push(d);
-
-
-                 node.transition()
-                     .delay(100)
-                     .duration(1000)
-                     .style("opacity",function(o){
-                             return connected3.includes(o)? 0.9:0.1;
-                             });
-                     
-                 link.style("opacity",function(o){
-                      return connected3.includes(o.source)&&connected3.includes(o.target)? 0.9:0.1;
-                      })
-                     .style("stroke",function(o){
-                         return connected3.includes(o.source)&&connected3.includes(o.target)? "red":"#999999";
-                     })
-                     .style("stroke-width","2px");
-        }
-        if (cdoID==3){
-             // direct neighbors
-            var connected=[];
-                node.each(function(o){
-                     if (isConnected(d,o)&&o.group==2&&o.size>1){
-                          connected.push(o);
-                         }
-                     });
-
-            // 2nd order neighbors and 1 CDO links
-            var connected1=[];
-                 node.each(function(o){
-                    connected.forEach(function(e){
-                        if (isConnected(e,o)&&o.group==1&&o!=d){
-                         connected1.push(o);
-                         connected1.push(e);
-                         }
-                       })
-                    });
-
-             // 3rd order neighbors
-            var connected2=[];
-                 node.each(function(o){
-                    connected1.forEach(function(e){
-                        if (isConnected(e,o)&&o.group==2&&e.group==1&&(!connected1.includes(o))&&o.size>1){
-                            connected2.push(o);
-                            connected2.push(e);
-                         }
-                       })
-                    });
-        
-            // 4th order neighbors and 2 CDO links
-             var connected3=[];
-                 node.each(function(o){
-                    connected2.forEach(function(e){
-                        if(isConnected(o,e)&&e.group==2&&o.group==1&&(!connected2.includes(o))&&o.size>1){
-                            connected3.push(o);
-                            connected3.push(e);
-                        }
-                    })
-                 });
-    
-            // 5th order neighbors
-             var connected4=[];
-             node.each(function(o){
-                 connected3.forEach(function(e){
-                     if (isConnected(e,o)&&e.group==1&&o.group==2&&(!connected3.includes(o))){
-                         connected4.push(o);
-                         connected4.push(e);
-                         }
-                    })
-                });
-
-             var connected5=[];
-             node.each(function(o){
-                connected4.forEach(function(e){
-                    if (isConnected(e,o)&&e.group==2&&o.group==1&&(!connected4.includes(o))){
-                        connected5.push(o);
-                        connected5.push(e);
-                    }
-                })
-             });
-
-             // if(connected5.length!=0&&(!connected5.includes(d))){
-             //    connected5.push(d);
-             // }
-             connected5.push(d);
-
-            // 6th order neighbors and 3 CDO links
-                if (connected5.length!=0){
-                     node.transition()
-                         .delay(100)
-                         .duration(1000)
-                         .style("opacity",function(o){
-                                 return connected5.includes(o)? 0.9:0.1;
-                                 });
-                         
-                     link.style("opacity",function(o){
-                          return connected5.includes(o.source)&&connected5.includes(o.target)? 0.9:0.1;
-                          })
-                         .style("stroke",function(o){
-                             return connected5.includes(o.source)&&connected5.includes(o.target)? "red":"#999999";
-                         })
-                         .style("stroke-width","2px");
-                }else{
-                    var combined=connected1.concat(connected2,connected3,d);
-
-                    node.transition()
-                         .delay(100)
-                         .duration(1000)
-                         .style("opacity",function(o){
-                                 return combined.includes(o)? 0.9:0.1;
-                                 });
-                         
-                     link.style("opacity",function(o){
-                          return combined.includes(o.source)&&combined.includes(o.target)? 0.9:0.1;
-                          })
-                         .style("stroke",function(o){
-                             return combined.includes(o.source)&&combined.includes(o.target)? "red":"#999999";
-                         })
-                         .style("stroke-width","2px");
-                }
-            }
-        }
-}
 
 function threshold(thresh){
      d3.select("#range").text(thresh);
@@ -1051,8 +962,8 @@ function reset(){
 
     // Append a SVG to the body of the html page. Assign this SVG as an object to svg
      svg=d3.select("div#container").append("svg")
-        .attr("width",width*1.1)
-        .attr("height",height)
+        .attr("width",width*0.9)
+        .attr("height",height*1.1)
         .attr('viewBox','0 0 '+width*2.3+' '+height*1.5)
         .attr('perserveAspectRatio','xMidYMid meet')
         .append("g")
@@ -1115,7 +1026,7 @@ function reset(){
                 .attr('class', 'legend')
                 .attr('ID', function(d) { return d.name })
                 .attr("transform", function(d,i) {
-                        return "translate(" + 60 + "," + (i+3)*50 + ")";
+                        return "translate(" + -200 + "," + (i+3)*50 + ")";
                 });
 
     legend.append("rect")
@@ -1173,12 +1084,6 @@ function reset(){
     cdoname=document.getElementById('cdo');
     cdoname.addEventListener("change",effectOfCdO);
     
-    // CDO Ownership
-     bankname=document.getElementById('bank')
-    bankname.addEventListener("change", crossOwnership);
-
-     links=document.getElementById('cdoOwnership')
-    links.addEventListener("change", crossOwnership);
     // Drag and pin a node down
      node_drag = d3.behavior.drag()
         .origin(function(d){return d;})
@@ -1193,6 +1098,11 @@ function reset(){
     $('input').each(function() { this.value = 0, threshold(this.value)});
     document.getElementById('reset').value="Reset";
     document.getElementById('tooltip').style.display="none";
+
+     $('#reset_button').click(function(){
+        $('input[name="Three_Cluster"]:nth-of-type(1)').prop('checked',true);
+    })
+
 }
 
 var acknowledge_1=0;
@@ -1208,6 +1118,7 @@ function acknowledge(){
         acknowledge_1=0;
     }
 }
+
 });
 </script>
 
