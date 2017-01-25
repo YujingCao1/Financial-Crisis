@@ -940,7 +940,7 @@ function effectOfCdO(){
             .delay(500)
             .duration(2000)
             .style("opacity",function(o){
-                return nodeLeft.includes(o)?0.1:1;
+                return nodeLeft.includes(o)&&o!=d?0.1:1;
             });
         link.transition()
             .delay(500)
